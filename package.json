@@ -1,0 +1,24 @@
+{
+  "name": "codex.editor.header",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^0.26.1",
+    "eslint": "^3.12.2",
+    "eslint-loader": "^1.6.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "postcss-cssnext": "^2.9.0",
+    "postcss-loader": "^1.2.1",
+    "postcss-smart-import": "^0.6.6",
+    "stylelint-webpack-plugin": "^0.4.2",
+    "uglifyjs-webpack-plugin": "^0.4.6",
+    "webpack": "^1.14.0"
+  }
+}
