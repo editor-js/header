@@ -8,18 +8,12 @@ module.exports = function () {
   /**
    * Load module package info
    */
-  let pkg = require('../package');
+  let {exportModuleName, version} = require('../package');
 
   /**
    * Create variable for tag element
    */
   let element;
-
-  /**
-   * Create variable for popup settings element
-   */
-  let settings;
-
 
   let render_ = require('./js/render');
 
@@ -69,7 +63,7 @@ module.exports = function () {
     let classPopup = 'cdx-plugin-settings--horisontal',
         classPopupItem = 'cdx-plugin-settings__item';
 
-    settings = document.createElement('DIV');
+    let settings = document.createElement('DIV');
 
     settings.classList.add(classPopup);
 
@@ -84,7 +78,7 @@ module.exports = function () {
 
     /**
      * Replaces old header with new type
-     * @params {string} type - new header tagName: H1—H6
+     * @param {string} type - new header tagName: H1—H6
      */
     let selectTypeClicked = function selectTypeClicked(type) {
       let newElement = {};
@@ -128,11 +122,11 @@ module.exports = function () {
   };
 
   /**
-   * Returns object with public functions
+   * Return object with public functions
    */
   return {
-    name: pkg.exportModuleName,
-    version: pkg.version,
+    name: exportModuleName,
+    version: version,
     render: render,
     validate: validate,
     save: save,

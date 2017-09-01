@@ -9,7 +9,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
 
 /**
- * Gets package params
+ * Get package params
  */
 var pkg = require('./package');
 
