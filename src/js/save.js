@@ -9,7 +9,6 @@
 module.exports = (element) => {
   let data = {
     'heading-styles': element.tagName,
-    'format': 'html',
     'text': element.textContent || ''
   };
 
