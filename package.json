@@ -1,30 +1,31 @@
 {
   "name": "codex.editor.header",
-  "exportModuleName": "header",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "keywords": [],
   "description": "Header plugin for CodeX.Editor",
   "license": "MIT",
   "repository": "https://github.com/codex-editor/header",
-  "main": "./lib/bundle.js",
+  "main": "./dist/bundle.js",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack --config ./webpack.config.js --mode production --watch"
   },
   "author": {
     "name": "CodeX Team",
     "email": "team@ifmo.su"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-es2015": "^6.24.1",
-    "css-loader": "^0.28.0",
-    "eslint": "^3.19.0",
-    "eslint-loader": "^1.7.1",
-    "extract-text-webpack-plugin": "^2.1.0",
-    "postcss-cssnext": "^2.10.0",
-    "postcss-loader": "^1.3.3",
-    "postcss-smart-import": "^0.6.12",
-    "webpack": "^2.4.1"
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "css-loader": "^1.0.0",
+    "mini-css-extract-plugin": "^0.4.1",
+    "optimize-css-assets-webpack-plugin": "^5.0.0",
+    "webpack": "^4.16.3",
+    "webpack-cli": "^3.1.0"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
   }
 }
