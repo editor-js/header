@@ -1,7 +1,7 @@
 /**
  * Build styles
  */
-require('./index.css');
+require('./index.css').toString();
 
 /**
  * @typedef {Object} HeaderData

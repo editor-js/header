@@ -18,3 +18,7 @@
  * Styles for Plugin icon in Toolbar
  */
 .ce-header__icon {}
+
+body {
+    background-color: red;
+}

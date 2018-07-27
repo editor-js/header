@@ -1,6 +1,3 @@
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-
 module.exports = {
   entry: './src/index.js',
   module: {
@@ -13,19 +10,12 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          "style-loader",
           "css-loader"
         ]
       }
     ]
   },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: "bundle.css",
-    }),
-
-    new OptimizeCSSAssetsPlugin({})
-  ],
   output: {
     path: __dirname + '/dist',
     publicPath: '/',
