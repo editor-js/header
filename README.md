@@ -20,7 +20,7 @@ const Header = require('codex.editor.header');
 
 ### Download to your project's source dir
 
-1. Download folder `dist` from repository
+1. Upload folder `dist` from repository
 2. Add `dist/bundle.js` file to your page.
 
 ### Load from CDN
