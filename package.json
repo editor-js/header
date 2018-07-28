@@ -2,7 +2,7 @@
   "name": "codex.editor.header",
   "version": "2.0.0",
   "keywords": [],
-  "description": "Header plugin for CodeX.Editor",
+  "description": "Header Tool for CodeX.Editor",
   "license": "MIT",
   "repository": "https://github.com/codex-editor/header",
   "main": "./dist/bundle.js",

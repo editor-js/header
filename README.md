@@ -1,6 +1,6 @@
 # Header Tool
 
-Header text blocks for [CodeX Editor](https://ifmo.su/editor).
+Provides Headings Blocks for the [CodeX Editor](https://ifmo.su/editor).
 
 ## Installation
 
@@ -12,26 +12,26 @@ Get the package
 npm i --save-dev codex.editor.header
 ```
 
-Include module in your application
+Include module at your application
 
 ```javascript
 const Header = require('codex.editor.header');
 ```
 
-### Load to your project's source dir
+### Download to your project's source dir
 
 1. Download folder `dist` from repository
 2. Add `dist/bundle.js` file to your page.
 
 ### Load from CDN
 
-You can get sources from [RawGit](https://rawgit.com) CDN.
+Get newest bundle path from [RawGit](https://rawgit.com) — open site and paste link to JS bundle in repository.
 
-To get the link paste paths to JS files and get `production` links to the latest version of Tool.
+`https://github.com/codex-editor/header/blob/master/dist/bundle.js`
 
-Then require these link on page with CodeX Editor.
- 
-**JS**: `https://github.com/codex-editor/header/blob/master/dist/bundle.js`
+> Note: use `production` link with commit hash to avoid issues with caching.
+
+Then require this script on page with CodeX Editor.
 
 ```html
 <script src="..."></script>
@@ -39,7 +39,7 @@ Then require these link on page with CodeX Editor.
 
 ## Usage
 
-Add a new Tool to `tools` param for CodeX Editor initial config.
+Add a new Tool to the `tools` property of the CodeX Editor initial config.
 
 ```javascript
 var editor = CodexEditor({
