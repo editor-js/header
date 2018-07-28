@@ -1,49 +1,59 @@
-# Header Tool for CodeX Editor
+# Header Tool
 
-Header Editor module for text blocks.
+Provides Headings Blocks for the [CodeX Editor](https://ifmo.su/editor).
 
-## Install via npm
+## Installation
+
+### Install via NPM
+
+Get the package
 
 ```shell
-npm i --save codex.editor.header
+npm i --save-dev codex.editor.header
 ```
 
-#### Connect with Webpack
+Include module at your application
 
-Include module in your application
-
-```js
-require('codex.editor.header');
+```javascript
+const Header = require('codex.editor.header');
 ```
 
-Include CSS file
+### Download to your project's source dir
 
-```css
-@import url("~codex.editor.header/lib/bundle.css");
+1. Upload folder `dist` from repository
+2. Add `dist/bundle.js` file to your page.
+
+### Load from CDN
+
+Get newest bundle path from [RawGit](https://rawgit.com) — open site and paste link to JS bundle in repository.
+
+`https://github.com/codex-editor/header/blob/master/dist/bundle.js`
+
+> Note: use `production` link with commit hash to avoid issues with caching.
+
+Then require this script on page with CodeX Editor.
+
+```html
+<script src="..."></script>
 ```
 
-## Install directly
+## Usage
 
-1. Download folder `lib` from repository
-2. Add `lib/bundle.js` and `lib/bundle.css` files to your page.
+Add a new Tool to the `tools` property of the CodeX Editor initial config.
 
-## CodeX Editor
+```javascript
+var editor = CodexEditor({
+  ...
+  
+  tools: {
+    ...
+    header: Header,
+  }
+  
+  ...
+});
+```
 
-API oriented, open-source, block-styled Edtior.
+## Config Params
 
-https://github.com/codex-team/codex.editor
-
-## Authors
-
-We are small team of Web-developing fans consisting of IFMO students and graduates located in St. Petersburg, Russia.
-Fell free to give us a feedback on <a href="mailto::team@ifmo.su">team@ifmo.su</a>
-
-https://ifmo.su
-
-### Follow us!
-
-VK: https://vk.com/codex_team
-
-Telegram: https://t.me/codex_team
-
-Instagram: https://www.instagram.com/codex_team
+This Tool has no config params
