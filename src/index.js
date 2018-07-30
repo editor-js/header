@@ -35,15 +35,6 @@ class Header {
   }
 
   /**
-   * Class for the Toolbox icon
-   * @returns {string}
-   * @public
-   */
-  static get iconClassName() {
-    return 'ce-header__icon';
-  }
-
-  /**
    * Render plugin`s main Element and fill it with saved data
    * @param {HeaderData} blockData - previously saved data
    * @param {HeaderConfig} blockConfig - Tool's config from Editor
