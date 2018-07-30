@@ -1,3 +1,5 @@
+![](https://badgen.net/badge/CodeX%20Editor/v2.0/blue)
+
 # Header Tool
 
 Provides Headings Blocks for the [CodeX Editor](https://ifmo.su/editor).
@@ -57,3 +59,28 @@ var editor = CodexEditor({
 ## Config Params
 
 This Tool has no config params
+
+## Tool's settings
+
+![](https://capella.pics/5ef43c5b-441f-48bd-9b53-854f57f8161b.jpg)
+
+You can select one of three levels for heading.
+
+## Output data
+
+| Field  | Type     | Description                                   |
+| ------ | -------- | --------------------------------------------- |
+| text   | `string` | header's text                                 |
+| level  | `number` | level of header: 2 for H2, 3 for H3, 4 for H4 |
+
+
+```json
+{
+    "type" : "header",
+    "data" : {
+        "text" : "Why Telegram is the best messenger",
+        "level" : 2
+    }
+}
+```
+
