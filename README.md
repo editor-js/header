@@ -64,7 +64,7 @@ This Tool has no config params
 
 ![](https://capella.pics/5ef43c5b-441f-48bd-9b53-854f57f8161b.jpg)
 
-Use second, third or fourth header level for Block.
+You can select one of three levels for heading.
 
 ## Output data
 
