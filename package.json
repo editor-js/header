@@ -1,7 +1,11 @@
 {
   "name": "codex.editor.header",
-  "version": "2.0.0",
-  "keywords": [],
+  "version": "2.0.1",
+  "keywords": [
+    "codex editor",
+    "header",
+    "tool"
+  ],
   "description": "Header Tool for CodeX.Editor",
   "license": "MIT",
   "repository": "https://github.com/codex-editor/header",
