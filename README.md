@@ -91,7 +91,7 @@ var editor = CodexEditor({
     header: {
       class: Header,
       config: {
-        placeholder: 'Place for an awesome header'
+        placeholder: 'Enter a header'
       }
     }
   }
