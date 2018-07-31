@@ -50,7 +50,7 @@ var editor = CodexEditor({
   tools: {
     ...
     header: Header,
-  }
+  },
   
   ...
 });
@@ -68,9 +68,9 @@ var editor = CodexEditor({
     ...
     header: {
       class: Header,
-      shortcut: 'CMD+SHIFT+H'
-    }
-  }
+      shortcut: 'CMD+SHIFT+H',
+    },
+  },
   
   ...
 });
@@ -78,7 +78,27 @@ var editor = CodexEditor({
 
 ## Config Params
 
-This Tool has no config params
+| Field       | Type     | Description                 |
+| ----------- | -------- | --------------------------- |
+| placeholder | `string` | header's placeholder string |
+
+```javascript
+var editor = CodexEditor({
+  ...
+  
+  tools: {
+    ...
+    header: {
+      class: Header,
+      config: {
+        placeholder: 'Enter a header'
+      }
+    }
+  }
+  
+  ...
+});
+```
 
 ## Tool's settings
 
