@@ -56,6 +56,26 @@ var editor = CodexEditor({
 });
 ```
 
+## Shortcut
+
+You can insert this Block by a useful shortcut. Set it up with the `tools[].shortcut` property of the Editor's initial config.
+
+```javascript
+var editor = CodexEditor({
+  ...
+  
+  tools: {
+    ...
+    header: {
+      class: Header,
+      shortcut: 'CMD+SHIFT+H'
+    }
+  }
+  
+  ...
+});
+```
+
 ## Config Params
 
 This Tool has no config params
