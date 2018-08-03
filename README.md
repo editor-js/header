@@ -26,12 +26,9 @@ const Header = require('codex.editor.header');
 2. Add `dist/bundle.js` file to your page.
 
 ### Load from CDN
+You can load specific version of package from [jsDelivr CDN](https://www.jsdelivr.com/package/npm/codex.editor.header).
 
-Get newest bundle path from [RawGit](https://rawgit.com) — open site and paste link to JS bundle in repository.
-
-`https://github.com/codex-editor/header/blob/master/dist/bundle.js`
-
-> Note: use `production` link with commit hash to avoid issues with caching.
+`https://cdn.jsdelivr.net/npm/codex.editor.header@2.0.4`
 
 Then require this script on page with CodeX Editor.
 

@@ -36,11 +36,13 @@ class Header {
 
   /**
    * Render plugin`s main Element and fill it with saved data
-   * @param {HeaderData} blockData - previously saved data
-   * @param {HeaderConfig} blockConfig - Tool's config from Editor
-   * @param {object} api - CodeX Editor API
+   *
+   * @param {{data: HeaderData, config: HeaderConfig, api: object}}
+   *   data — previously saved data
+   *   config - user config for Tool
+   *   api - CodeX Editor API
    */
-  constructor(blockData, blockConfig, api) {
+  constructor({data, config, api}) {
     this.api = api;
 
     /**
@@ -59,14 +61,14 @@ class Header {
      * @type {HeaderConfig}
      * @private
      */
-    this._settings = blockConfig;
+    this._settings = config;
 
     /**
      * Block's data
      * @type {HeaderData}
      * @private
      */
-    this._data = blockData || {};
+    this._data = data || {};
 
     /**
      * List of settings buttons
