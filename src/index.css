@@ -2,8 +2,9 @@
  * Plugin styles
  */
 .ce-header {
-  padding: 1em 0 0.1em;
+  padding: 1em 0;
   margin: 0;
+  margin-bottom: -0.9em;
   line-height: 1.5em;
   outline: none;
 }
