@@ -200,7 +200,7 @@ class Header {
       text: this.api.sanitizer.clean(toolsContent.innerHTML, {
         b: false,
         i: false,
-        a: false
+        p: false,
       }),
       level: this.api.sanitizer.clean(this.currentLevel.number, 'all')
     };
