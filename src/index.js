@@ -196,13 +196,13 @@ class Header {
    * @public
    */
   save(toolsContent) {
-    /**
-     * @todo sanitize data
-     */
-
     return {
-      text: toolsContent.innerHTML,
-      level: this.currentLevel.number
+      text: this.api.sanitizer.clean(toolsContent.innerHTML, {
+        b: false,
+        i: false,
+        a: false
+      }),
+      level: this.api.sanitizer.clean(this.currentLevel.number, 'all')
     };
   }
 
