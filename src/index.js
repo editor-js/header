@@ -202,6 +202,9 @@ class Header {
     };
   }
 
+  /**
+   * Sanitizer Rules
+   */
   get sanitize() {
     return {
       text: {
