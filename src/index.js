@@ -202,6 +202,19 @@ class Header {
     };
   }
 
+  get sanitize() {
+    return {
+      text: {
+        a: {
+          href: true,
+          target: '_blank',
+          rel: 'nofollow'
+        }
+      },
+      level: {}
+    };
+  }
+
   /**
    * Get current Tools`s data
    * @returns {HeaderData} Current data
