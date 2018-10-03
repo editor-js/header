@@ -197,12 +197,8 @@ class Header {
    */
   save(toolsContent) {
     return {
-      text: this.api.sanitizer.clean(toolsContent.innerHTML, {
-        b: false,
-        i: false,
-        p: false,
-      }),
-      level: this.api.sanitizer.clean(this.currentLevel.number, 'all')
+      text: toolsContent.innerHTML,
+      level: this.currentLevel.number
     };
   }
 
