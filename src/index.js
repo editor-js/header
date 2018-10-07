@@ -207,13 +207,6 @@ class Header {
    */
   get sanitize() {
     return {
-      text: {
-        a: {
-          href: true,
-          target: '_blank',
-          rel: 'nofollow'
-        }
-      },
       level: {}
     };
   }
