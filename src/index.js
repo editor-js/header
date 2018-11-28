@@ -348,11 +348,10 @@ class Header {
   /**
    * Handle H1-H6 tags on paste to substitute it with header Tool
    *
-   * @private
-   * @param {HTMLElement} content - pasted element
-   * @returns {{level: number, text: *}}
+   * @param {PasteEvent} event - event with pasted content
    */
-  static onPasteHandler(content) {
+  onPaste(event) {
+    const content = event.detail.data;
     let level = 4;
 
     switch (content.tagName) {
@@ -366,7 +365,7 @@ class Header {
         break;
     }
 
-    return {
+    this.data = {
       level,
       text: content.innerHTML
     };
@@ -378,9 +377,8 @@ class Header {
    *
    * @returns {{handler: (function(HTMLElement): {text: string}), tags: string[]}}
    */
-  static get onPaste() {
+  static get pasteConfig() {
     return {
-      handler: Header.onPasteHandler,
       tags: ['H1', 'H2', 'H3', 'H4', 'H5', 'H6']
     };
   }
