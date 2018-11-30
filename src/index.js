@@ -187,13 +187,18 @@ class Header {
    * @public
    */
   save(toolsContent) {
-    /**
-     * @todo sanitize data
-     */
-
     return {
       text: toolsContent.innerHTML,
       level: this.currentLevel.number
+    };
+  }
+
+  /**
+   * Sanitizer Rules
+   */
+  get sanitize() {
+    return {
+      level: {}
     };
   }
 
