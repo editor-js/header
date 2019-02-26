@@ -1,8 +1,8 @@
-![](https://badgen.net/badge/CodeX%20Editor/v2.0/blue)
+![](https://badgen.net/badge/Editor.js/v2.0/blue)
 
 # Header Tool
 
-Provides Headings Blocks for the [CodeX Editor](https://ifmo.su/editor).
+Provides Headings Blocks for the [Editor.js](https://ifmo.su/editor).
 
 ## Installation
 
@@ -11,13 +11,13 @@ Provides Headings Blocks for the [CodeX Editor](https://ifmo.su/editor).
 Get the package
 
 ```shell
-npm i --save-dev codex.editor.header
+npm i --save-dev @editorjs/header
 ```
 
 Include module at your application
 
 ```javascript
-const Header = require('codex.editor.header');
+const Header = require('@editorjs/header');
 ```
 
 ### Download to your project's source dir
@@ -26,11 +26,11 @@ const Header = require('codex.editor.header');
 2. Add `dist/bundle.js` file to your page.
 
 ### Load from CDN
-You can load specific version of package from [jsDelivr CDN](https://www.jsdelivr.com/package/npm/codex.editor.header).
+You can load specific version of package from [jsDelivr CDN](https://www.jsdelivr.com/package/npm/@editorjs/header).
 
-`https://cdn.jsdelivr.net/npm/codex.editor.header@2.0.4`
+`https://cdn.jsdelivr.net/npm/@editorjs/header@2.0.4`
 
-Then require this script on page with CodeX Editor.
+Then require this script on page with Editor.js.
 
 ```html
 <script src="..."></script>
@@ -38,10 +38,10 @@ Then require this script on page with CodeX Editor.
 
 ## Usage
 
-Add a new Tool to the `tools` property of the CodeX Editor initial config.
+Add a new Tool to the `tools` property of the Editor.js initial config.
 
 ```javascript
-var editor = CodexEditor({
+var editor = EditorJS({
   ...
   
   tools: {
@@ -58,7 +58,7 @@ var editor = CodexEditor({
 You can insert this Block by a useful shortcut. Set it up with the `tools[].shortcut` property of the Editor's initial config.
 
 ```javascript
-var editor = CodexEditor({
+var editor = EditorJS({
   ...
   
   tools: {
@@ -80,7 +80,7 @@ var editor = CodexEditor({
 | placeholder | `string` | header's placeholder string |
 
 ```javascript
-var editor = CodexEditor({
+var editor = EditorJS({
   ...
   
   tools: {
