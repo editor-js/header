@@ -17,7 +17,7 @@ require('./index.css').toString();
  */
 
 /**
- * Header block for the CodeX Editor.
+ * Header block for the Editor.js.
  *
  * @author CodeX (team@ifmo.su)
  * @copyright CodeX 2018
@@ -31,7 +31,7 @@ class Header {
    * @param {{data: HeaderData, config: HeaderConfig, api: object}}
    *   data — previously saved data
    *   config - user config for Tool
-   *   api - CodeX Editor API
+   *   api - Editor.js API
    */
   constructor({data, config, api}) {
     this.api = api;
@@ -155,7 +155,7 @@ class Header {
 
   /**
    * Method that specified how to merge two Text blocks.
-   * Called by CodeX Editor by backspace at the beginning of the Block
+   * Called by Editor.js by backspace at the beginning of the Block
    * @param {HeaderData} data
    * @public
    */
@@ -368,7 +368,7 @@ class Header {
   }
 
   /**
-   * Used by Codex Editor paste handling API.
+   * Used by Editor.js paste handling API.
    * Provides configuration to handle H1-H6 tags.
    *
    * @returns {{handler: (function(HTMLElement): {text: string}), tags: string[]}}
