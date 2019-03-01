@@ -10,7 +10,7 @@
   ],
   "description": "Header Tool for Editor.js",
   "license": "MIT",
-  "repository": "https://github.com/editorjs/header",
+  "repository": "https://github.com/editor-js/header",
   "main": "./dist/bundle.js",
   "scripts": {
     "build": "webpack --mode production",
