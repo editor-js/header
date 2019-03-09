@@ -7,7 +7,7 @@ require('./index.css').toString();
  * @typedef {Object} HeaderData
  * @description Tool's input and output data format
  * @property {String} text — Header's content
- * @property {number} level - Header's level from 1 to 3
+ * @property {number|string} level - Header's level from 1 to 3
  */
 
 /**
@@ -301,7 +301,7 @@ class Header {
    * @return {level}
    */
   get currentLevel() {
-    let level = this.levels.find( level => level.number === this._data.level);
+    let level = this.levels.find(levelItem => levelItem.number === parseInt(this._data.level));
 
     if (!level) {
       level = this.levels[0];
