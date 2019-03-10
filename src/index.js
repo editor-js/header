@@ -59,7 +59,7 @@ class Header {
      * @type {HeaderData}
      * @private
      */
-    this._data = data || {};
+    this._data = this.normalizeData(data);
 
     /**
      * List of settings buttons
@@ -73,6 +73,23 @@ class Header {
      * @private
      */
     this._element = this.getTag();
+  }
+
+  /**
+   * Normalize input data
+   * @param {HeaderData} data
+   * @return {HeaderData}
+   * @private
+   */
+  normalizeData(data) {
+    if (typeof data !== 'object') {
+      data = {};
+    }
+
+    data.text = data.text || '';
+    data.level = parseInt(data.level) || this.defaultLevel;
+
+    return data;
   }
 
   /**
@@ -223,7 +240,7 @@ class Header {
    * @private
    */
   set data(data) {
-    this._data = data || {};
+    this._data = this.normalizeData(data);
 
     /**
      * If level is set and block in DOM
@@ -301,13 +318,21 @@ class Header {
    * @return {level}
    */
   get currentLevel() {
-    let level = this.levels.find( level => level.number === this._data.level);
+    let level = this.levels.find(levelItem => levelItem.number === this._data.level);
 
     if (!level) {
-      level = this.levels[0];
+      level = this.defaultLevel;
     }
 
     return level;
+  }
+
+  /**
+   * Return default level
+   * @returns {level}
+   */
+  get defaultLevel() {
+    return this.levels[0];
   }
 
   /**
