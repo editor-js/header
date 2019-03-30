@@ -160,7 +160,7 @@ class Header {
   setLevel(level) {
     this.data = {
       level: level,
-      text: this._data.text
+      text: this.data.text
     };
 
     /**
