@@ -19,3 +19,13 @@
  * Styles for Plugin icon in Toolbar
  */
 .ce-header__icon {}
+
+.ce-header[contentEditable=true][data-placeholder]:empty::before{
+  content: attr(data-placeholder);
+  color: #707684;
+  font-weight: normal;
+}
+
+.ce-header[contentEditable=true][data-placeholder]:empty:focus::before {
+  opacity: 0.3;
+}
