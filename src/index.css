@@ -20,10 +20,16 @@
  */
 .ce-header__icon {}
 
-.ce-header[contentEditable=true][data-placeholder]:empty::before{
+.ce-header[contentEditable=true][data-placeholder]::before{
+  position: absolute;
   content: attr(data-placeholder);
   color: #707684;
   font-weight: normal;
+  opacity: 0;
+}
+
+.ce-header[contentEditable=true][data-placeholder]:empty::before {
+  opacity: 1;
 }
 
 .ce-header[contentEditable=true][data-placeholder]:empty:focus::before {
