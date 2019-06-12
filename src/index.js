@@ -212,9 +212,19 @@ class Header {
   }
 
   /**
+   * @return {{export: string, import: string}}
+   */
+  static get conversionConfig() {
+    return {
+      export: 'text',
+      import: 'text'
+    };
+  }
+
+  /**
    * Sanitizer Rules
    */
-  get sanitize() {
+  static get sanitize() {
     return {
       level: {}
     };
