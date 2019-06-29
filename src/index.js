@@ -212,12 +212,12 @@ class Header {
   }
 
   /**
-   * @return {{export: string, import: string}}
+   * Allow Header to be converted to/from other blocks
    */
   static get conversionConfig() {
     return {
-      export: 'text',
-      import: 'text'
+      export: 'text', // use 'text' property for other blocks
+      import: 'text' // fill 'text' property from other block's export string
     };
   }
 
