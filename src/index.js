@@ -82,14 +82,16 @@ class Header {
    * @private
    */
   normalizeData(data) {
+    const newData = {};
+
     if (typeof data !== 'object') {
       data = {};
     }
 
-    data.text = data.text || '';
-    data.level = parseInt(data.level) || this.defaultLevel.number;
+    newData.text = data.text || '';
+    newData.level = parseInt(data.level) || this.defaultLevel.number;
 
-    return data;
+    return newData;
   }
 
   /**
