@@ -17,7 +17,7 @@ npm i --save-dev @editorjs/header
 Include module at your application
 
 ```javascript
-const Header = require("@editorjs/header");
+const Header = require('@editorjs/header');
 ```
 
 ### Download to your project's source dir

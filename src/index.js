@@ -214,9 +214,19 @@ class Header {
   }
 
   /**
+   * Allow Header to be converted to/from other blocks
+   */
+  static get conversionConfig() {
+    return {
+      export: 'text', // use 'text' property for other blocks
+      import: 'text' // fill 'text' property from other block's export string
+    };
+  }
+
+  /**
    * Sanitizer Rules
    */
-  get sanitize() {
+  static get sanitize() {
     return {
       level: {}
     };
