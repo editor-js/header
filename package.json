@@ -1,6 +1,6 @@
 {
   "name": "@editorjs/header",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "keywords": [
     "codex editor",
     "header",
@@ -25,6 +25,7 @@
     "@babel/preset-env": "^7.3.4",
     "babel-loader": "^8.0.5",
     "css-loader": "^1.0.0",
+    "raw-loader": "^3.1.0",
     "style-loader": "^0.21.0",
     "webpack": "^4.29.5",
     "webpack-cli": "^3.2.3"
