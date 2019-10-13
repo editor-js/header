@@ -82,14 +82,16 @@ class Header {
    * @private
    */
   normalizeData(data) {
+    const newData = {};
+
     if (typeof data !== 'object') {
       data = {};
     }
 
-    data.text = data.text || '';
-    data.level = parseInt(data.level) || this.defaultLevel.number;
+    newData.text = data.text || '';
+    newData.level = parseInt(data.level) || this.defaultLevel.number;
 
-    return data;
+    return newData;
   }
 
   /**
@@ -212,12 +214,12 @@ class Header {
   }
 
   /**
-   * @return {{export: string, import: string}}
+   * Allow Header to be converted to/from other blocks
    */
   static get conversionConfig() {
     return {
-      export: 'text',
-      import: 'text'
+      export: 'text', // use 'text' property for other blocks
+      import: 'text' // fill 'text' property from other block's export string
     };
   }
 
