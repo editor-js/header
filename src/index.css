@@ -25,13 +25,13 @@
   content: attr(data-placeholder);
   color: #707684;
   font-weight: normal;
-  opacity: 0;
+  display: none;
 }
 
 .ce-header[contentEditable=true][data-placeholder]:empty::before {
-  opacity: 1;
+  display: block;
 }
 
 .ce-header[contentEditable=true][data-placeholder]:empty:focus::before {
-  opacity: 0;
+  display: none;
 }
