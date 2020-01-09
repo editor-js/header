@@ -76,9 +76,11 @@ var editor = EditorJS({
 
 ## Config Params
 
-| Field       | Type     | Description                 |
-| ----------- | -------- | --------------------------- |
-| placeholder | `string` | header's placeholder string |
+| Field        | Type       | Description                 |
+| ------------ | ---------- | --------------------------- |
+| placeholder  | `string`   | header's placeholder string |
+| levels       | `number[]` | enabled heading levels      |
+| defaultLevel | `number`   | default heading level       |
 
 ```javascript
 var editor = EditorJS({
@@ -89,7 +91,9 @@ var editor = EditorJS({
     header: {
       class: Header,
       config: {
-        placeholder: 'Enter a header'
+        placeholder: 'Enter a header',
+        levels: [2, 3, 4],
+        defaultLevel: 3
       }
     }
   }

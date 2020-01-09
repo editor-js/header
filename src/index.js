@@ -7,13 +7,15 @@ require('./index.css').toString();
  * @typedef {Object} HeaderData
  * @description Tool's input and output data format
  * @property {String} text — Header's content
- * @property {number} level - Header's level from 1 to 3
+ * @property {number} level - Header's level from 1 to 6
  */
 
 /**
  * @typedef {Object} HeaderConfig
  * @description Tool's config from Editor
  * @property {string} placeholder — Block's placeholder
+ * @property {array} levels — Heading levels
+ * @property {number} defaultLevel — default level
  */
 
 /**
@@ -346,9 +348,15 @@ class Header {
    */
   get defaultLevel() {
     /**
-     * Use H2 as default header
+     * Use default level specified in settings or H2 as default header
      */
-    return this.levels[1];
+    let level = this._settings.levels
+      ? this.levels.find(
+          levelItem => levelItem.number === this._settings.defaultLevel
+        )
+      : this.levels[1];
+
+    return level;
   }
 
   /**
@@ -363,7 +371,7 @@ class Header {
    * @return {level[]}
    */
   get levels() {
-    return [
+    const availableLevels = [
       {
         number: 1,
         tag: 'H1',
@@ -395,6 +403,10 @@ class Header {
         svg: '<svg width="18" height="14" xmlns="http://www.w3.org/2000/svg"><path d="M2.152 1.494V4.98h4.646V1.494c0-.498.097-.871.293-1.12A.934.934 0 0 1 7.863 0c.324 0 .586.123.786.37.2.246.301.62.301 1.124v9.588c0 .503-.101.88-.304 1.128a.964.964 0 0 1-.783.374.928.928 0 0 1-.775-.378c-.194-.251-.29-.626-.29-1.124V6.989H2.152v4.093c0 .503-.101.88-.304 1.128a.964.964 0 0 1-.783.374.928.928 0 0 1-.775-.378C.097 11.955 0 11.58 0 11.082V1.494C0 .996.095.623.286.374A.929.929 0 0 1 1.066 0c.323 0 .585.123.786.37.2.246.3.62.3 1.124zM12.53 7.058a3.093 3.093 0 0 1 1.004-.814 2.734 2.734 0 0 1 1.214-.264c.43 0 .827.08 1.19.24.365.161.684.39.957.686.274.296.485.645.635 1.048a3.6 3.6 0 0 1 .223 1.262c0 .637-.145 1.216-.437 1.736-.292.52-.699.926-1.221 1.218-.522.292-1.114.438-1.774.438-.76 0-1.416-.186-1.967-.557-.552-.37-.974-.919-1.265-1.645-.292-.726-.438-1.613-.438-2.662 0-.855.088-1.62.265-2.293.176-.674.43-1.233.76-1.676.33-.443.73-.778 1.2-1.004.47-.226 1.006-.339 1.608-.339.579 0 1.089.113 1.53.34.44.225.773.506.997.84.224.335.335.656.335.964 0 .185-.07.354-.21.505a.698.698 0 0 1-.536.227.874.874 0 0 1-.529-.18 1.039 1.039 0 0 1-.36-.498 1.42 1.42 0 0 0-.495-.655 1.3 1.3 0 0 0-.786-.247c-.24 0-.479.069-.716.207a1.863 1.863 0 0 0-.6.56c-.33.479-.525 1.333-.584 2.563zm1.832 4.213c.456 0 .834-.186 1.133-.56.298-.373.447-.862.447-1.468 0-.412-.07-.766-.21-1.062a1.584 1.584 0 0 0-.577-.678 1.47 1.47 0 0 0-.807-.234c-.28 0-.548.074-.804.224-.255.149-.461.365-.617.647a2.024 2.024 0 0 0-.234.994c0 .61.158 1.12.475 1.527.316.407.714.61 1.194.61z"/></svg>'
       }
     ];
+
+    return this._settings.levels ? availableLevels.filter(
+      l => this._settings.levels.includes(l.number)
+    ) : availableLevels;
   }
 
   /**
@@ -409,13 +421,15 @@ class Header {
      * Define default level value
      * @type {number}
      */
-    let level = 2;
+    let level = this._settings.defaultLevel || 2;
 
     switch (content.tagName) {
       case 'H1':
         level = 1;
         break;
-      /** H2 is a default level */
+      case 'H2':
+        level = 2;
+        break;
       case 'H3':
         level = 3;
         break;
@@ -428,6 +442,13 @@ class Header {
       case 'H6':
         level = 6;
         break;
+    }
+
+    if (this._settings.levels) {
+      // Fallback to nearest level when specified not available
+      level = this._settings.levels.reduce((prevLevel, currLevel) => {
+        return Math.abs(currLevel - level) < Math.abs(prevLevel - level) ? currLevel : prevLevel;
+      });
     }
 
     this.data = {
