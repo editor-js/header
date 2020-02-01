@@ -14,7 +14,7 @@ require('./index.css').toString();
  * @typedef {Object} HeaderConfig
  * @description Tool's config from Editor
  * @property {string} placeholder — Block's placeholder
- * @property {array} levels — Heading levels
+ * @property {number[]} levels — Heading levels
  * @property {number} defaultLevel — default level
  */
 
