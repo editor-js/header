@@ -76,6 +76,8 @@ var editor = EditorJS({
 
 ## Config Params
 
+All properties are optional.
+
 | Field        | Type       | Description                 |
 | ------------ | ---------- | --------------------------- |
 | placeholder  | `string`   | header's placeholder string |

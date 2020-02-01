@@ -348,9 +348,9 @@ class Header {
    */
   get defaultLevel() {
     /**
-     * User can specify available levels with own default one
+     * User can specify own default level value
      */
-    if (this._settings.levels && this._settings.defaultLevel) {
+    if (this._settings.defaultLevel) {
       let userSpecified = this.levels.find(levelItem => {
         return levelItem.number === this._settings.defaultLevel
       });
@@ -361,6 +361,7 @@ class Header {
         console.warn('(ง\'̀-\'́)ง Heading Tool: the default level specified was not found in available levels')
       }
     }
+
     /**
      * With no additional options, there will be H2 by default
      * @type {level}
@@ -430,7 +431,7 @@ class Header {
      * Define default level value
      * @type {number}
      */
-    let level = this._settings.defaultLevel || 2;
+    let level = this.defaultLevel.number;
 
     switch (content.tagName) {
       case 'H1':
