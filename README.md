@@ -76,9 +76,13 @@ var editor = EditorJS({
 
 ## Config Params
 
-| Field       | Type     | Description                 |
-| ----------- | -------- | --------------------------- |
-| placeholder | `string` | header's placeholder string |
+All properties are optional.
+
+| Field        | Type       | Description                 |
+| ------------ | ---------- | --------------------------- |
+| placeholder  | `string`   | header's placeholder string |
+| levels       | `number[]` | enabled heading levels      |
+| defaultLevel | `number`   | default heading level       |
 
 ```javascript
 var editor = EditorJS({
@@ -89,7 +93,9 @@ var editor = EditorJS({
     header: {
       class: Header,
       config: {
-        placeholder: 'Enter a header'
+        placeholder: 'Enter a header',
+        levels: [2, 3, 4],
+        defaultLevel: 3
       }
     }
   }
@@ -100,9 +106,9 @@ var editor = EditorJS({
 
 ## Tool's settings
 
-![An image showing the header block tool](https://capella.pics/5ef43c5b-441f-48bd-9b53-854f57f8161b.jpg)
+![An image showing the header block tool](https://capella.pics/634ad545-08d7-4cb7-8409-f01289e0e5e1.jpg)
 
-You can select one of three levels for heading.
+You can select one of six levels for heading.
 
 ## Output data
 
