@@ -35,7 +35,7 @@ class Header {
    *   config - user config for Tool
    *   api - Editor.js API
    */
-  constructor({data, config, api}) {
+  constructor({ data, config, api }) {
     this.api = api;
 
     /**
@@ -113,8 +113,13 @@ class Header {
   renderSettings() {
     let holder = document.createElement('DIV');
 
+    // do not add settings button, when only one level is configured
+    if (this.levels.length <= 1) {
+      return holder;
+    }
+
     /** Add type selectors */
-    this.levels.forEach( level => {
+    this.levels.forEach(level => {
       let selectTypeButton = document.createElement('SPAN');
 
       selectTypeButton.classList.add(this._CSS.settingsButton);
@@ -352,13 +357,13 @@ class Header {
      */
     if (this._settings.defaultLevel) {
       let userSpecified = this.levels.find(levelItem => {
-        return levelItem.number === this._settings.defaultLevel
+        return levelItem.number === this._settings.defaultLevel;
       });
 
-      if (userSpecified){
+      if (userSpecified) {
         return userSpecified;
       } else {
-        console.warn('(ง\'̀-\'́)ง Heading Tool: the default level specified was not found in available levels')
+        console.warn('(ง\'̀-\'́)ง Heading Tool: the default level specified was not found in available levels');
       }
     }
 
