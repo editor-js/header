@@ -125,40 +125,39 @@ class Header {
       selectTypeButton.classList.add(this._CSS.settingsButton);
 
       /**
-      * Highlight current level button
-      */
+       * Highlight current level button
+       */
       if (this.currentLevel.number === level.number) {
         selectTypeButton.classList.add(this._CSS.settingsButtonActive);
       }
 
       /**
-      * Add SVG icon
-      */
+       * Add SVG icon
+       */
       selectTypeButton.innerHTML = level.svg;
 
       /**
-      * Save level to its button
-      */
+       * Save level to its button
+       */
       selectTypeButton.dataset.level = level.number;
 
       /**
-      * Set up click handler
-      */
+       * Set up click handler
+       */
       selectTypeButton.addEventListener('click', () => {
         this.setLevel(level.number);
       });
 
       /**
-      * Append settings button to holder
-      */
+       * Append settings button to holder
+       */
       holder.appendChild(selectTypeButton);
 
       /**
-      * Save settings buttons
-      */
+       * Save settings buttons
+       */
       this.settingsButtons.push(selectTypeButton);
     });
-
 
     return holder;
   }
