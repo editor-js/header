@@ -11,7 +11,7 @@ Provides Headings Blocks for the [Editor.js](https://ifmo.su/editor).
 Get the package
 
 ```shell
-npm i --save-dev @editorjs/header
+npm i --save @editorjs/header
 ```
 
 Include module at your application
