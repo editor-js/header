@@ -254,6 +254,15 @@ class Header {
   }
 
   /**
+   * Returns true to notify core that read-only is supported
+   *
+   * @returns {boolean}
+   */
+  static get isReadOnlySupported() {
+    return true;
+  }
+
+  /**
    * Get current Tools`s data
    *
    * @returns {HeaderData} Current data
