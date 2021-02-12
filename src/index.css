@@ -26,7 +26,7 @@
   color: #707684;
   font-weight: normal;
   display: none;
-  cursor: text;
+  pointer-events: none;
 }
 
 .ce-header[contentEditable=true][data-placeholder]:empty::before {
