@@ -355,7 +355,7 @@ class Header {
     /**
      * Add Placeholder
      */
-    tag.dataset.placeholder = this.api.i18n.t(this._settings.placeholder || '');
+    tag.dataset.placeholder = this.api.i18n.t('input');
 
     return tag;
   }
