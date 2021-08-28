@@ -10,7 +10,6 @@ jobs:
       options: --user 1001
     steps:
       - uses: actions/checkout@v2
-      - run: yarn pull_tools && yarn tools:update
       - uses: cypress-io/github-action@v2
         with:
           config: video=false
@@ -21,7 +20,6 @@ jobs:
     runs-on: ubuntu-16.04
     steps:
       - uses: actions/checkout@v2
-      - run: yarn pull_tools && yarn tools:update
       - uses: cypress-io/github-action@v2
         with:
           config: video=false
@@ -32,7 +30,6 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - run: yarn pull_tools && yarn tools:update
       - uses: cypress-io/github-action@v2
         with:
           config: video=false
