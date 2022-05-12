@@ -563,7 +563,14 @@ class Header {
    * @returns {ToolboxItem}
    */
   get activeToolboxEntry() {
-    return Header.toolbox.find(toolboxItem => toolboxItem.config.defaultLevel === this.currentLevel.number);
+    const activeToolboxItem = Header.toolbox.find(toolboxItem => toolboxItem.config.defaultLevel === this.currentLevel.number);
+
+    if (activeToolboxItem) {
+      return activeToolboxItem;
+    }
+    const activeSettingsItem = this.levels.find(level => level.number === this.currentLevel.number);
+
+    return { icon: activeSettingsItem.svg };
   }
 }
 
