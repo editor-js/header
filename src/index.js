@@ -570,7 +570,9 @@ class Header {
     }
     const activeSettingsItem = this.levels.find(level => level.number === this.currentLevel.number);
 
-    return { icon: activeSettingsItem.svg };
+    if (activeSettingsItem) {
+      return { icon: activeSettingsItem.svg };
+    }
   }
 }
 
