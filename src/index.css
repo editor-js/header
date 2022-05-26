@@ -35,3 +35,8 @@
 .ce-header[contentEditable=true][data-placeholder]:empty:focus::before {
   display: none;
 }
+
+.ce-header__tune-button svg {
+  width: 16px;
+  height: 16px;
+}
