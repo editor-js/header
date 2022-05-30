@@ -30,7 +30,7 @@ import IconH6 from '../assets/icon-h6.svg';
  * @description Tool's single toolbox item config
  * @property {string} icon - toolbox item icon
  * @property {string} title - toolbox item title
- * @property {HeaderConfig} config - tool's default config overrides applied with this specific toolbox item
+ * @property {HeaderData} data - tool's data overrides applied with this specific toolbox item
  */
 
 /**
