@@ -10,7 +10,6 @@
   "description": "Header Tool for Editor.js",
   "license": "MIT",
   "repository": "https://github.com/editor-js/header",
-  "type": "module",
   "files": [
     "dist"
   ],
@@ -22,7 +21,6 @@
       "require": "./dist/header.umd.js"
     }
   },
-  "jsdelivr": "./dist/header.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build"
