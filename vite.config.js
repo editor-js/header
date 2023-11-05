@@ -10,8 +10,8 @@ export default {
     copyPublicDir: false,
     lib: {
       entry: path.resolve(__dirname, "src", "index.js"),
-      name: "Paragraph",
-      fileName: "paragraph",
+      name: "Header",
+      fileName: "header",
     },
   },
   define: {

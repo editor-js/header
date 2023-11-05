@@ -10,11 +10,22 @@
   "description": "Header Tool for Editor.js",
   "license": "MIT",
   "repository": "https://github.com/editor-js/header",
-  "main": "./dist/bundle.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/header.umd.js",
+  "module": "./dist/header.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/header.mjs",
+      "require": "./dist/header.umd.js"
+    }
+  },
+  "jsdelivr": "./dist/header.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build"
   },
   "author": {
     "name": "CodeX",
