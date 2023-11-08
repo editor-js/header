@@ -1,4 +1,4 @@
 .idea/
 src/
-webpack.config.js
+vite.config.js
 yarn.lock
