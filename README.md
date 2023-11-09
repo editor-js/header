@@ -18,17 +18,7 @@ Include module at your application
 import Header from '@editorjs/header';
 ```
 
-### Load from CDN
-
-You can load specific version of package from [jsDelivr CDN](https://www.jsdelivr.com/package/npm/@editorjs/header).
-
-`https://cdn.jsdelivr.net/npm/@editorjs/header@latest`
-
-Then require this script on page with Editor.js.
-
-```html
-<script src="..."></script>
-```
+Optionally, you can load this tool from CDN [JsDelivr CDN](https://cdn.jsdelivr.net/npm/@editorjs/header@latest)
 
 ## Usage
 
