@@ -6,24 +6,17 @@ Provides Headings Blocks for the [Editor.js](https://ifmo.su/editor).
 
 ## Installation
 
-### Install via NPM
-
 Get the package
 
 ```shell
-npm i --save @editorjs/header
+yarn add @editorjs/header
 ```
 
 Include module at your application
 
 ```javascript
-const Header = require('@editorjs/header');
+import Header from '@editorjs/header';
 ```
-
-### Download to your project's source dir
-
-1. Upload folder `dist` from repository
-2. Add `dist/bundle.js` file to your page.
 
 ### Load from CDN
 
