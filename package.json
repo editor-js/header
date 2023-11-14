@@ -15,6 +15,7 @@
   ],
   "main": "./dist/header.umd.js",
   "module": "./dist/header.mjs",
+  "types": "./types/header.d.ts",
   "exports": {
     ".": {
       "import": "./dist/header.mjs",
