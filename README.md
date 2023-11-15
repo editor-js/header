@@ -61,11 +61,12 @@ var editor = EditorJS({
 
 All properties are optional.
 
-| Field        | Type       | Description                 |
-| ------------ | ---------- | --------------------------- |
-| placeholder  | `string`   | header's placeholder string |
-| levels       | `number[]` | enabled heading levels      |
-| defaultLevel | `number`   | default heading level       |
+| Field           | Type       | Description                         |
+| --------------- | ---------- | ----------------------------------- |
+| placeholder     | `string`   | header's placeholder string         |
+| levels          | `number[]` | enabled heading levels              |
+| defaultLevel    | `number`   | default heading level               |
+| allowLineBreaks | `bool`     | allow line breaks. default: `false` |
 
 ```javascript
 var editor = EditorJS({
@@ -78,7 +79,8 @@ var editor = EditorJS({
       config: {
         placeholder: 'Enter a header',
         levels: [2, 3, 4],
-        defaultLevel: 3
+        defaultLevel: 3,
+        allowLineBreaks: true 
       }
     }
   }

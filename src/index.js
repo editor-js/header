@@ -171,10 +171,14 @@ export default class Header {
    * @public
    */
   save(toolsContent) {
-    return {
-      text: toolsContent.innerHTML,
+    const sanitizerConfig = {
+      br: !(typeof this._settings.allowLineBreaks === 'undefined' || this._settings.allowLineBreaks === false),
+    }
+
+    return Object.assign({}, {
+      text: this.api.sanitizer.clean(toolsContent.innerHTML, sanitizerConfig),
       level: this.currentLevel.number,
-    };
+    });
   }
 
   /**
@@ -193,7 +197,9 @@ export default class Header {
   static get sanitize() {
     return {
       level: false,
-      text: {},
+      text: {
+        br: true,
+      },
     };
   }
 
