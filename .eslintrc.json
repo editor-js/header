@@ -1,0 +1,18 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "codex/ts"
+    ],
+    "parserOptions": {
+
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "rules": {
+        "semi": ["warn", "always"],
+        "quotes": ["warn", "double"]
+    }   
+}
