@@ -90,15 +90,15 @@ interface PasteEvent {
  * Header block for the Editor.js.
  */
 export default class Header {
-  api: API;   
-  readOnly: boolean;
-  _CSS: {
+  public api: API;   
+  public readOnly: boolean;
+  #CSS: {
     block: string;
     wrapper: string;
   };
-  _settings: HeaderConfig;
-  _data: HeaderData;
-  _element: HTMLHeadingElementWithAlign ;
+  #settings: HeaderConfig;
+  #data: HeaderData;
+  #element: HTMLHeadingElementWithAlign ;
 
   /**
    * Render plugin`s main Element and fill it with saved data
@@ -118,7 +118,7 @@ export default class Header {
      *
      * @type {object}
      */
-    this._CSS = {
+    this.#CSS = {
       block: this.api.styles.block,
       wrapper: 'ce-header',
     };
@@ -129,7 +129,7 @@ export default class Header {
      * @type {HeaderConfig}
      * @private
      */
-    this._settings = config;
+    this.#settings = config;
 
     /**
      * Block's data
@@ -137,14 +137,14 @@ export default class Header {
      * @type {HeaderData}
      * @private
      */
-    this._data = this.normalizeData(data);
+    this.#data = this.normalizeData(data);
     /**
      * Main Block wrapper
      *
      * @type {HTMLHeadingElementWithAlign}
      * @private
      */
-    this._element = this.getTag();
+    this.#element = this.getTag();
   }
 
   /**
@@ -155,10 +155,10 @@ export default class Header {
    * @returns {HeaderData}
    * @private
    */
-  normalizeData(data: HeaderData): HeaderData {
+  public normalizeData(data: HeaderData): HeaderData {
     const newData: HeaderData = {
       text: data.text || '',
-      level: parseInt(data.level as any) || this.defaultLevel.number,
+      level: data.level || this.defaultLevel.number,
     };
 
     return newData;
@@ -169,8 +169,8 @@ export default class Header {
    * @returns {HTMLHeadingElementWithAlign}
    * @public
    */
-  render(): HTMLHeadingElementWithAlign {
-    return this._element;
+  public render(): HTMLHeadingElementWithAlign {
+    return this.#element;
   }
 
   /**
@@ -178,7 +178,7 @@ export default class Header {
    *
    * @returns {Array}
    */
-  renderSettings(): Array<{ icon: string; label: string; onActivate: () => void; closeOnActivate: boolean; isActive: boolean }> {
+  public renderSettings(): Array<{ icon: string; label: string; onActivate: () => void; closeOnActivate: boolean; isActive: boolean }> {
     return this.levels.map((level) => ({
       icon: level.svg,
       label: this.api.i18n.t(`Heading ${level.number}`),
@@ -192,7 +192,7 @@ export default class Header {
    *
    * @param {number} level - level to set
    */
-  setLevel(level: number): void {
+  public setLevel(level: number): void {
     this.data = {
       level: level,
       text: this.data.text,
@@ -206,7 +206,7 @@ export default class Header {
    * @param {HeaderData} data - saved data to merger with current block
    * @public
    */
-  merge(data: HeaderData): void {
+  public merge(data: HeaderData): void {
     const newData: HeaderData = {
       text: this.data.text + data.text,
       level: this.data.level,
@@ -223,7 +223,7 @@ export default class Header {
    * @returns {boolean} false if saved data is not correct, otherwise true
    * @public
    */
-  validate(blockData: HeaderData): boolean {
+  public validate(blockData: HeaderData): boolean {
     return blockData.text.trim() !== '';
   }
 
@@ -234,7 +234,7 @@ export default class Header {
    * @returns {HeaderData} - saved data
    * @public
    */
-  save(toolsContent: HTMLHeadingElement): HeaderData {
+  public save(toolsContent: HTMLHeadingElement): HeaderData {
     return {
       text: toolsContent.innerHTML,
       level: this.currentLevel.number,
@@ -244,7 +244,7 @@ export default class Header {
   /**
    * Allow Header to be converted to/from other blocks
    */
-  static get conversionConfig(): { export: string; import: string } {
+  public static get conversionConfig(): { export: string; import: string } {
     return {
       export: 'text',
       import: 'text',
@@ -254,7 +254,7 @@ export default class Header {
   /**
    * Sanitizer Rules
    */
-  static get sanitize(): { level: boolean; text: {} } {
+  public static get sanitize(): { level: boolean; text: object } {
     return {
       level: false,
       text: {},
@@ -266,7 +266,7 @@ export default class Header {
    *
    * @returns {boolean}
    */
-  static get isReadOnlySupported(): boolean {
+  public static get isReadOnlySupported(): boolean {
     return true;
   }
 
@@ -276,11 +276,11 @@ export default class Header {
    * @returns {HeaderData} Current data
    * @private
    */
-  get data(): HeaderData {
-    this._data.text = this._element.innerHTML;
-    this._data.level = this.currentLevel.number;
+  public get data(): HeaderData {
+    this.#data.text = this.#element.innerHTML;
+    this.#data.level = this.currentLevel.number;
 
-    return this._data;
+    return this.#data;
   }
 
   /**
@@ -291,15 +291,15 @@ export default class Header {
    * @param {HeaderData} data — data to set
    * @private
    */ 
-  set data(data: HeaderData) {
-    this._data = this.normalizeData(data);
+  public set data(data: HeaderData) {
+    this.#data = this.normalizeData(data);
 
     /**
      * If level is set and block in DOM
      * then replace it to a new block
      */
-    if (data.level !== undefined && this._element.parentNode) {
-     /**
+    if (data.level !== undefined && this.#element.parentNode) {
+      /**
        * Create a new tag
        *
        * @type {HTMLHeadingElementWithAlign}
@@ -309,12 +309,12 @@ export default class Header {
       /**
        * Save Block's content
        */ 
-      newHeader.innerHTML = this._element.innerHTML;
+      newHeader.innerHTML = this.#element.innerHTML;
 
       /**
        * Replace blocks
        */ 
-      this._element.parentNode.replaceChild(newHeader, this._element);
+      this.#element.parentNode.replaceChild(newHeader, this.#element);
       
       /**
        * Save new block to private variable
@@ -322,37 +322,37 @@ export default class Header {
        * @type {HTMLHeadingElementWithAlign}
        * @private
        */ 
-      this._element = newHeader;
+      this.#element = newHeader;
     }
 
     /**
      * If data.text was passed then update block's content
      */
     if (data.text !== undefined) {
-      this._element.innerHTML = this._data.text || '';
+      this.#element.innerHTML = this.#data.text || '';
     }
   }
-   /**
+  /**
    * Get tag for target level
    * By default returns second-leveled header
    *
    * @returns {HTMLHeadingElementWithAlign}
    */
-  getTag(): HTMLHeadingElementWithAlign {
+  public getTag(): HTMLHeadingElementWithAlign {
     /**
      * Create element for current Block's level
      */
-     const tag = document.createElement(this.currentLevel.tag) as HTMLHeadingElementWithAlign;
+    const tag = document.createElement(this.currentLevel.tag) as HTMLHeadingElementWithAlign;
 
     /**
      * Add text to block
      */
-    tag.innerHTML = this._data.text || '';
+    tag.innerHTML = this.#data.text || '';
 
     /**
      * Add styles class
      */
-    tag.classList.add(this._CSS.wrapper);
+    tag.classList.add(this.#CSS.wrapper);
 
     /**
      * Make tag editable
@@ -362,7 +362,7 @@ export default class Header {
     /**
      * Add Placeholder
      */ 
-    tag.dataset.placeholder = this.api.i18n.t(this._settings.placeholder || '');
+    tag.dataset.placeholder = this.api.i18n.t(this.#settings.placeholder || ' ');
 
     return tag;
   }
@@ -372,8 +372,8 @@ export default class Header {
    *
    * @returns {level}
    */ 
-  get currentLevel(): Level {
-    let level = this.levels.find((levelItem) => levelItem.number === this._data.level);
+  public get currentLevel(): Level {
+    let level = this.levels.find((levelItem) => levelItem.number === this.#data.level);
 
     if (!level) {
       level = this.defaultLevel;
@@ -387,13 +387,13 @@ export default class Header {
    *
    * @returns {level}
    */
-  get defaultLevel(): Level {
+  public get defaultLevel(): Level {
     /**
      * User can specify own default level value
      */
-    if (this._settings.defaultLevel) {
+    if (this.#settings.defaultLevel) {
       const userSpecified = this.levels.find((levelItem) => {
-        return levelItem.number === this._settings.defaultLevel;
+        return levelItem.number === this.#settings.defaultLevel;
       });
 
       if (userSpecified) {
@@ -403,7 +403,7 @@ export default class Header {
       }
     }
 
-   /**
+    /**
      * With no additional options, there will be H2 by default
      *
      * @type {level}
@@ -411,12 +411,12 @@ export default class Header {
     return this.levels[1];
   }
 
-/**
- * Available header levels
- *
- * @returns {level[]}
- */
-get levels(): Level[] {
+  /**
+   * Available header levels
+   *
+   * @returns {level[]}
+   */
+  public get levels(): Level[] {
     const availableLevels = [
       {
         number: 1,
@@ -450,7 +450,7 @@ get levels(): Level[] {
       },
     ];
   
-    const settingsLevels = this._settings?.levels;
+    const settingsLevels = this.#settings?.levels;
   
     if (Array.isArray(settingsLevels)) {
       return availableLevels.filter(l => settingsLevels.includes(l.number));
@@ -464,7 +464,7 @@ get levels(): Level[] {
    *
    * @param {PasteEvent} event - event with pasted content
    */
-  onPaste(event: PasteEvent): void {
+  public onPaste(event: PasteEvent): void {
     const content = event.detail.data;
 
     /**
@@ -495,9 +495,9 @@ get levels(): Level[] {
         break;
     }
 
-    if (this._settings.levels) {
+    if (this.#settings.levels) {
       // Fallback to nearest level when specified not available
-      level = this._settings.levels.reduce((prevLevel, currLevel) => {
+      level = this.#settings.levels.reduce((prevLevel, currLevel) => {
         return Math.abs(currLevel - level) < Math.abs(prevLevel - level) ? currLevel : prevLevel;
       });
     }
@@ -508,15 +508,15 @@ get levels(): Level[] {
     };
   }
 
-/**
- * Used by Editor.js paste handling API.
- * Provides configuration to handle H1-H6 tags.
- *
- * @returns {{handler: (function(HTMLElement): {text: string}), tags: string[]}}
- */
-static get pasteConfig() {
+  /**
+   * Used by Editor.js paste handling API.
+   * Provides configuration to handle H1-H6 tags.
+   *
+   * @returns {{handler: (function(HTMLElement): {text: string}), tags: string[]}}
+   */
+  public static get pasteConfig(): {handler: (content: HTMLElement) => object, tags: string[]} {
     return {
-      handler: (content: HTMLElement) => {
+      handler: (content: HTMLElement):object => {
         return { text: content.innerHTML };
       },
       tags: ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'],
@@ -530,7 +530,7 @@ static get pasteConfig() {
    *
    * @returns {{icon: string, title: string}}
    */
-  static get toolbox(): { icon: string; title: string } {
+  public static get toolbox(): { icon: string; title: string } {
     return {
       icon: IconHeading,
       title: 'Heading',

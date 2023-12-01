@@ -24,13 +24,22 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "lint": "eslint src/ --quiet"
   },
   "author": {
     "name": "CodeX",
     "email": "team@codex.so"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "eslint": "^8.54.0",
+    "eslint-config-codex": "^1.9.1",
+    "eslint-config-standard-with-typescript": "^40.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-promise": "^6.0.0",
+    "typescript": "*",
     "vite": "^4.5.0",
     "vite-plugin-css-injected-by-js": "^3.3.0"
   },
