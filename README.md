@@ -109,3 +109,7 @@ You can select one of six levels for heading.
   }
 }
 ```
+
+## CSP support
+
+If you're using Content Security Policy (CSP) pass a `nonce` via [`<meta property="csp-nonce" content={{ nonce }} />`](https://github.com/marco-prontera/vite-plugin-css-injected-by-js#usestrictcsp-boolean) in your document head.
