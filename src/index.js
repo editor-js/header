@@ -18,6 +18,7 @@ import { IconH1, IconH2, IconH3, IconH4, IconH5, IconH6, IconHeading } from '@co
  * @property {string} placeholder — Block's placeholder
  * @property {number[]} levels — Heading levels
  * @property {number} defaultLevel — default level
+ * @property {boolean} preserveBlank - Whether or not to keep blank headers when saving editor data
  */
 
 /**
@@ -160,7 +161,11 @@ export default class Header {
    * @public
    */
   validate(blockData) {
-    return blockData.text.trim() !== '';
+    if (blockData.text.trim() === '' && !this.preserveBlank) {
+      return false;
+    }
+
+    return true;
   }
 
   /**
@@ -397,6 +402,17 @@ export default class Header {
     return this._settings.levels ? availableLevels.filter(
       l => this._settings.levels.includes(l.number)
     ) : availableLevels;
+  }
+
+  /**
+   * Get preserveBlank
+   *
+   * @returns {preserveBlank}
+   */
+  get preserveBlank() {
+    let preserveBlank = this._settings.preserveBlank || false;
+
+    return preserveBlank;
   }
 
   /**
