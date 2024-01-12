@@ -66,6 +66,7 @@ All properties are optional.
 | placeholder  | `string`   | header's placeholder string |
 | levels       | `number[]` | enabled heading levels      |
 | defaultLevel | `number`   | default heading level       |
+| preserveBlank | `boolean` | (default: `false`) Whether or not to keep blank headers when saving editor data |
 
 ```javascript
 var editor = EditorJS({
