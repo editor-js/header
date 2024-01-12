@@ -116,7 +116,6 @@ export default class Header {
   renderSettings() {
     return this.levels.map(level => ({
       icon: level.svg,
-      name: level.tag,
       label: this.api.i18n.t(`Heading ${level.number}`),
       onActivate: () => this.setLevel(level.number),
       closeOnActivate: true,
