@@ -40,15 +40,11 @@ export default class Header {
   /**
    * Render plugin`s main Element and fill it with saved data
    *
-   * @param root0
-   * @param root0.data
-   * @param root0.config
-   * @param root0.api
-   * @param root0.readOnly
-   *   data — previously saved data
-   *   config - user config for Tool
-   *   api - Editor.js API
-   *   readOnly - read only mode flag
+   * @param params - constructor params
+   * @param params.data — previously saved data
+   * @param params.config - user config for Tool
+   * @param params.api - Editor.js API
+   * @param params.readOnly - read only mode flag
    */
   constructor({ data, config, api, readOnly }) {
     this.api = api;
