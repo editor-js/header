@@ -3,12 +3,7 @@
  */
 import './index.css';
 
-import IconH1 from '../assets/icon-h1.svg';
-import IconH2 from '../assets/icon-h2.svg';
-import IconH3 from '../assets/icon-h3.svg';
-import IconH4 from '../assets/icon-h4.svg';
-import IconH5 from '../assets/icon-h5.svg';
-import IconH6 from '../assets/icon-h6.svg';
+import { IconH1, IconH2, IconH3, IconH4, IconH5, IconH6 } from '@codexteam/icons';
 
 /**
  * @typedef {object} HeaderData
@@ -41,11 +36,15 @@ import IconH6 from '../assets/icon-h6.svg';
  * @license MIT
  * @version 2.0.0
  */
-export default class Heading {
+export default class Header {
   /**
    * Render plugin`s main Element and fill it with saved data
    *
-   * @param {{data: HeaderData, config: HeaderConfig, api: object}}
+   * @param root0
+   * @param root0.data
+   * @param root0.config
+   * @param root0.api
+   * @param root0.readOnly
    *   data — previously saved data
    *   config - user config for Tool
    *   api - Editor.js API
@@ -62,8 +61,6 @@ export default class Heading {
      */
     this._CSS = {
       block: this.api.styles.block,
-      settingsButton: this.api.styles.settingsButton,
-      settingsButtonActive: this.api.styles.settingsButtonActive,
       wrapper: 'ce-header',
       tuneButton: 'ce-header__tune-button',
     };
@@ -85,13 +82,6 @@ export default class Heading {
     this._data = this.normalizeData(data);
 
     /**
-     * List of settings buttons
-     *
-     * @type {HTMLElement[]}
-     */
-    this.settingsButtons = [];
-
-    /**
      * Main Block wrapper
      *
      * @type {HTMLElement}
@@ -104,7 +94,6 @@ export default class Heading {
    * Normalize input data
    *
    * @param {HeaderData} data - saved data to process
-   *
    * @returns {HeaderData}
    * @private
    */
@@ -132,60 +121,18 @@ export default class Heading {
   }
 
   /**
-   * Create Block's settings block
+   * Returns header block tunes config
    *
-   * @returns {HTMLElement}
+   * @returns {Array}
    */
   renderSettings() {
-    const holder = document.createElement('DIV');
-
-    // do not add settings button, when only one level is configured
-    if (this.levels.length <= 1) {
-      return holder;
-    }
-
-    /** Add type selectors */
-    this.levels.forEach(level => {
-      const selectTypeButton = document.createElement('SPAN');
-
-      selectTypeButton.classList.add(this._CSS.settingsButton, this._CSS.tuneButton);
-
-      /**
-       * Highlight current level button
-       */
-      if (this.currentLevel.number === level.number) {
-        selectTypeButton.classList.add(this._CSS.settingsButtonActive);
-      }
-
-      /**
-       * Add SVG icon
-       */
-      selectTypeButton.innerHTML = level.svg;
-
-      /**
-       * Save level to its button
-       */
-      selectTypeButton.dataset.level = level.number;
-
-      /**
-       * Set up click handler
-       */
-      selectTypeButton.addEventListener('click', () => {
-        this.setLevel(level.number);
-      });
-
-      /**
-       * Append settings button to holder
-       */
-      holder.appendChild(selectTypeButton);
-
-      /**
-       * Save settings buttons
-       */
-      this.settingsButtons.push(selectTypeButton);
-    });
-
-    return holder;
+    return this.levels.map(level => ({
+      icon: level.svg,
+      label: this.api.i18n.t(`Heading ${level.number}`),
+      onActivate: () => this.setLevel(level.number),
+      closeOnActivate: true,
+      isActive: this.currentLevel.number === level.number,
+    }));
   }
 
   /**
@@ -198,13 +145,6 @@ export default class Heading {
       level: level,
       text: this.data.text,
     };
-
-    /**
-     * Highlight button by selected level
-     */
-    this.settingsButtons.forEach(button => {
-      button.classList.toggle(this._CSS.settingsButtonActive, parseInt(button.dataset.level) === level);
-    });
   }
 
   /**

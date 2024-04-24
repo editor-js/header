@@ -1,33 +1,39 @@
 {
   "name": "@editorjs/header",
-  "version": "2.7.0",
+  "version": "2.8.1",
   "keywords": [
     "codex editor",
     "header",
-    "tool",
     "editor.js",
     "editorjs"
   ],
   "description": "Header Tool for Editor.js",
   "license": "MIT",
   "repository": "https://github.com/editor-js/header",
-  "main": "./dist/bundle.js",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/header.umd.js",
+  "module": "./dist/header.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/header.mjs",
+      "require": "./dist/header.umd.js"
+    }
+  },
   "scripts": {
-    "build": "webpack --mode production",
-    "build:dev": "webpack --mode development --watch"
+    "dev": "vite",
+    "build": "vite build"
   },
   "author": {
     "name": "CodeX",
     "email": "team@codex.so"
   },
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/preset-env": "^7.3.4",
-    "babel-loader": "^8.0.5",
-    "css-loader": "^1.0.0",
-    "raw-loader": "^3.1.0",
-    "style-loader": "^0.21.0",
-    "webpack": "^4.29.5",
-    "webpack-cli": "^3.2.3"
+    "vite": "^4.5.0",
+    "vite-plugin-css-injected-by-js": "^3.3.0"
+  },
+  "dependencies": {
+    "@codexteam/icons": "^0.0.5"
   }
 }
