@@ -3,7 +3,7 @@
  */
 import './index.css';
 
-import { IconH1, IconH2, IconH3, IconH4, IconH5, IconH6, IconHeading } from '@codexteam/icons';
+import { IconH1, IconH2, IconH3, IconH4, IconH5, IconH6 } from '@codexteam/icons';
 
 /**
  * @typedef {object} HeaderData
@@ -21,6 +21,14 @@ import { IconH1, IconH2, IconH3, IconH4, IconH5, IconH6, IconHeading } from '@co
  */
 
 /**
+ * @typedef {object} ToolboxItem
+ * @description Tool's single toolbox item config
+ * @property {string} icon - toolbox item icon
+ * @property {string} title - toolbox item title
+ * @property {HeaderData} data - tool's data overrides applied with this specific toolbox item
+ */
+
+/**
  * Header block for the Editor.js.
  *
  * @author CodeX (team@ifmo.su)
@@ -32,11 +40,11 @@ export default class Header {
   /**
    * Render plugin`s main Element and fill it with saved data
    *
-   * @param {{data: HeaderData, config: HeaderConfig, api: object}}
-   *   data — previously saved data
-   *   config - user config for Tool
-   *   api - Editor.js API
-   *   readOnly - read only mode flag
+   * @param params - constructor params
+   * @param params.data — previously saved data
+   * @param params.config - user config for Tool
+   * @param params.api - Editor.js API
+   * @param params.readOnly - read only mode flag
    */
   constructor({ data, config, api, readOnly }) {
     this.api = api;
@@ -50,6 +58,7 @@ export default class Header {
     this._CSS = {
       block: this.api.styles.block,
       wrapper: 'ce-header',
+      tuneButton: 'ce-header__tune-button',
     };
 
     /**
@@ -81,7 +90,6 @@ export default class Header {
    * Normalize input data
    *
    * @param {HeaderData} data - saved data to process
-   *
    * @returns {HeaderData}
    * @private
    */
@@ -106,21 +114,6 @@ export default class Header {
    */
   render() {
     return this._element;
-  }
-
-  /**
-   * Returns header block tunes config
-   *
-   * @returns {Array}
-   */
-  renderSettings() {
-    return this.levels.map(level => ({
-      icon: level.svg,
-      label: this.api.i18n.t(`Heading ${level.number}`),
-      onActivate: () => this.setLevel(level.number),
-      closeOnActivate: true,
-      isActive: this.currentLevel.number === level.number,
-    }));
   }
 
   /**
@@ -465,12 +458,31 @@ export default class Header {
    * icon - Tool icon's SVG
    * title - title to show in toolbox
    *
-   * @returns {{icon: string, title: string}}
+   * @returns {ToolboxItem[]}
    */
   static get toolbox() {
-    return {
-      icon: IconHeading,
-      title: 'Heading',
-    };
+    return [
+      {
+        icon: IconH1,
+        title: 'Heading 1',
+        data: {
+          level: 1,
+        },
+      },
+      {
+        icon: IconH2,
+        title: 'Heading 2',
+        data: {
+          level: 2,
+        },
+      },
+      {
+        icon: IconH3,
+        title: 'Heading 3',
+        data: {
+          level: 3,
+        },
+      },
+    ];
   }
 }
