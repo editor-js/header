@@ -121,21 +121,6 @@ export default class Header {
   }
 
   /**
-   * Returns header block tunes config
-   *
-   * @returns {Array}
-   */
-  renderSettings() {
-    return this.levels.map(level => ({
-      icon: level.svg,
-      label: this.api.i18n.t(`Heading ${level.number}`),
-      onActivate: () => this.setLevel(level.number),
-      closeOnActivate: true,
-      isActive: this.currentLevel.number === level.number,
-    }));
-  }
-
-  /**
    * Callback for Block's settings buttons
    *
    * @param {number} level - level to set
