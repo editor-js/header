@@ -13,8 +13,9 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/header.umd.js",
+  "main": "./dist/index.js",
   "module": "./dist/header.mjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/header.mjs",
@@ -30,6 +31,11 @@
     "email": "team@codex.so"
   },
   "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/node": "^20.14.2",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.6.3",
+    "typescript": "^5.4.5",
     "vite": "^4.5.0",
     "vite-plugin-css-injected-by-js": "^3.3.0"
   },

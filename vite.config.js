@@ -1,6 +1,7 @@
 import path from "path";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 import * as pkg from "./package.json";
+import typescript from '@rollup/plugin-typescript';
 
 const NODE_ENV = process.argv.mode || "development";
 const VERSION = pkg.version;
@@ -9,7 +10,7 @@ export default {
   build: {
     copyPublicDir: false,
     lib: {
-      entry: path.resolve(__dirname, "src", "index.js"),
+      entry: path.resolve(__dirname, "src", "index.ts"),
       name: "Header",
       fileName: "header",
     },
@@ -19,5 +20,8 @@ export default {
     VERSION: JSON.stringify(VERSION),
   },
 
-  plugins: [cssInjectedByJsPlugin()],
+  plugins: [cssInjectedByJsPlugin(),
+    typescript({
+      tsconfig: './tsconfig.json'
+    })],
 };

@@ -11,6 +11,10 @@ import { IconH1, IconH2, IconH3, IconH4, IconH5, IconH6, IconHeading } from '@co
  * @property {string} text — Header's content
  * @property {number} level - Header's level from 1 to 6
  */
+interface HeaderData {
+  text: string;
+  level: number;
+}
 
 /**
  * @typedef {object} HeaderConfig
@@ -19,6 +23,84 @@ import { IconH1, IconH2, IconH3, IconH4, IconH5, IconH6, IconHeading } from '@co
  * @property {number[]} levels — Heading levels
  * @property {number} defaultLevel — default level
  */
+interface HeaderConfig {
+  placeholder?: string;
+  levels?: number[];
+  defaultLevel?: number;
+}
+
+/**
+ * 
+ * @typedef {object} Level
+ * @description Heading level information
+ * @property {number} number - Level number
+ * @property {string} tag - HTML tag corresponding with level number
+ * @property {string} svg - Icon
+ */
+interface Level {
+  number: number;
+  tag: string;
+  svg: string;
+}
+
+/**
+ * 
+ * @typedef {object} PasteEvent
+ * @description Event triggered on paste
+ * @property {object} detail - Event details
+ * @property {HTMLElement} detail.data - Pasted content
+ */
+interface PasteEvent {
+  detail: {
+    data: HTMLElement;
+  };
+}
+
+/**
+ * 
+ * @typedef {object} ToolSettings
+ * @description Tool's styles configuration
+ * @property {string} block - Block style
+ * @property {string} wrapper - Wrapper style
+ */
+interface ToolSettings {
+  block: string;
+  wrapper: string;
+}
+
+/**
+ * 
+ * @typedef {object} BlockTune
+ * @description Configuration for block tunes
+ * @property {string} icon - Icon for the tune
+ * @property {string} label - Label for the tune
+ * @property {function} onActivate - Function to call on activation
+ * @property {boolean} closeOnActivate - Whether to close on activation
+ * @property {boolean} isActive - Whether the tune is active
+ */
+interface BlockTune {
+  icon: string;
+  label: string;
+  onActivate: () => void;
+  closeOnActivate: boolean;
+  isActive: boolean;
+}
+
+/**
+ * 
+ * @typedef {object} ConstructorArgs
+ * @description Constructor arguments for Header
+ * @property {HeaderData} data - Previously saved data
+ * @property {HeaderConfig} config - User config for the tool
+ * @property {object} api - Editor.js API
+ * @property {boolean} readOnly - Read-only mode flag
+ */
+interface ConstructorArgs {
+  data: HeaderData;
+  config: HeaderConfig;
+  api: any;
+  readOnly: boolean;
+}
 
 /**
  * Header block for the Editor.js.
@@ -38,7 +120,15 @@ export default class Header {
    *   api - Editor.js API
    *   readOnly - read only mode flag
    */
-  constructor({ data, config, api, readOnly }) {
+  
+  private api: any;
+  private readOnly: boolean;
+  private _CSS: ToolSettings;
+  private _settings: HeaderConfig;
+  private _data: HeaderData;
+  private _element: HTMLHeadingElement;
+
+  constructor({ data, config, api, readOnly }: ConstructorArgs) {
     this.api = api;
     this.readOnly = readOnly;
 
@@ -85,15 +175,15 @@ export default class Header {
    * @returns {HeaderData}
    * @private
    */
-  normalizeData(data) {
-    const newData = {};
+  normalizeData(data: HeaderData): HeaderData {
+    const newData: HeaderData = {text: '', level: this.defaultLevel.number };
 
     if (typeof data !== 'object') {
-      data = {};
+      data = {} as HeaderData;
     }
 
     newData.text = data.text || '';
-    newData.level = parseInt(data.level) || this.defaultLevel.number;
+    newData.level = parseInt(data.level.toString()) || this.defaultLevel.number;
 
     return newData;
   }
@@ -104,7 +194,7 @@ export default class Header {
    * @returns {HTMLHeadingElement}
    * @public
    */
-  render() {
+  render(): HTMLHeadingElement {
     return this._element;
   }
 
@@ -113,7 +203,7 @@ export default class Header {
    *
    * @returns {Array}
    */
-  renderSettings() {
+  renderSettings(): BlockTune[] {
     return this.levels.map(level => ({
       icon: level.svg,
       label: this.api.i18n.t(`Heading ${level.number}`),
@@ -128,7 +218,7 @@ export default class Header {
    *
    * @param {number} level - level to set
    */
-  setLevel(level) {
+  setLevel(level: number): void {
     this.data = {
       level: level,
       text: this.data.text,
@@ -142,7 +232,7 @@ export default class Header {
    * @param {HeaderData} data - saved data to merger with current block
    * @public
    */
-  merge(data) {
+  merge(data: HeaderData): void {
     const newData = {
       text: this.data.text + data.text,
       level: this.data.level,
@@ -159,7 +249,7 @@ export default class Header {
    * @returns {boolean} false if saved data is not correct, otherwise true
    * @public
    */
-  validate(blockData) {
+  validate(blockData: HeaderData): boolean {
     return blockData.text.trim() !== '';
   }
 
@@ -170,7 +260,7 @@ export default class Header {
    * @returns {HeaderData} - saved data
    * @public
    */
-  save(toolsContent) {
+  save(toolsContent: HTMLHeadingElement): HeaderData {
     return {
       text: toolsContent.innerHTML,
       level: this.currentLevel.number,
@@ -212,7 +302,7 @@ export default class Header {
    * @returns {HeaderData} Current data
    * @private
    */
-  get data() {
+  get data(): HeaderData {
     this._data.text = this._element.innerHTML;
     this._data.level = this.currentLevel.number;
 
@@ -227,7 +317,7 @@ export default class Header {
    * @param {HeaderData} data — data to set
    * @private
    */
-  set data(data) {
+  set data(data: HeaderData) {
     this._data = this.normalizeData(data);
 
     /**
@@ -275,11 +365,11 @@ export default class Header {
    *
    * @returns {HTMLElement}
    */
-  getTag() {
+  getTag(): HTMLHeadingElement {
     /**
      * Create element for current Block's level
      */
-    const tag = document.createElement(this.currentLevel.tag);
+    const tag = document.createElement(this.currentLevel.tag) as HTMLHeadingElement;
 
     /**
      * Add text to block
@@ -309,7 +399,7 @@ export default class Header {
    *
    * @returns {level}
    */
-  get currentLevel() {
+  get currentLevel(): Level {
     let level = this.levels.find(levelItem => levelItem.number === this._data.level);
 
     if (!level) {
@@ -324,7 +414,7 @@ export default class Header {
    *
    * @returns {level}
    */
-  get defaultLevel() {
+  get defaultLevel(): Level {
     /**
      * User can specify own default level value
      */
@@ -360,7 +450,7 @@ export default class Header {
    *
    * @returns {level[]}
    */
-  get levels() {
+  get levels(): Level[] {
     const availableLevels = [
       {
         number: 1,
@@ -395,7 +485,7 @@ export default class Header {
     ];
 
     return this._settings.levels ? availableLevels.filter(
-      l => this._settings.levels.includes(l.number)
+      l => this._settings.levels?.includes(l.number)
     ) : availableLevels;
   }
 
@@ -404,7 +494,7 @@ export default class Header {
    *
    * @param {PasteEvent} event - event with pasted content
    */
-  onPaste(event) {
+  onPaste(event: PasteEvent): void {
     const content = event.detail.data;
 
     /**
