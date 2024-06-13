@@ -4,101 +4,53 @@
 import './index.css';
 
 import { IconH1, IconH2, IconH3, IconH4, IconH5, IconH6, IconHeading } from '@codexteam/icons';
+import { API, BlockTune, PasteEvent } from '@editorjs/editorjs';
 
 /**
- * @typedef {object} HeaderData
- * @description Tool's input and output data format
- * @property {string} text — Header's content
- * @property {number} level - Header's level from 1 to 6
- */
-interface HeaderData {
+* @description Tool's input and output data format
+*/
+export interface HeaderData {
+  /** Header's content */
   text: string;
+  /** Header's level from 1 to 6 */
   level: number;
 }
 
 /**
- * @typedef {object} HeaderConfig
  * @description Tool's config from Editor
- * @property {string} placeholder — Block's placeholder
- * @property {number[]} levels — Heading levels
- * @property {number} defaultLevel — default level
  */
 interface HeaderConfig {
+  /** Block's placeholder */
   placeholder?: string;
+  /** Heading levels */
   levels?: number[];
+  /** Default level */
   defaultLevel?: number;
 }
 
 /**
- * 
- * @typedef {object} Level
  * @description Heading level information
- * @property {number} number - Level number
- * @property {string} tag - HTML tag corresponding with level number
- * @property {string} svg - Icon
  */
 interface Level {
+  /** Level number */
   number: number;
+  /** HTML tag corresponding with level number */
   tag: string;
+  /** Icon */
   svg: string;
 }
 
 /**
- * 
- * @typedef {object} PasteEvent
- * @description Event triggered on paste
- * @property {object} detail - Event details
- * @property {HTMLElement} detail.data - Pasted content
- */
-interface PasteEvent {
-  detail: {
-    data: HTMLElement;
-  };
-}
-
-/**
- * 
- * @typedef {object} ToolSettings
- * @description Tool's styles configuration
- * @property {string} block - Block style
- * @property {string} wrapper - Wrapper style
- */
-interface ToolSettings {
-  block: string;
-  wrapper: string;
-}
-
-/**
- * 
- * @typedef {object} BlockTune
- * @description Configuration for block tunes
- * @property {string} icon - Icon for the tune
- * @property {string} label - Label for the tune
- * @property {function} onActivate - Function to call on activation
- * @property {boolean} closeOnActivate - Whether to close on activation
- * @property {boolean} isActive - Whether the tune is active
- */
-interface BlockTune {
-  icon: string;
-  label: string;
-  onActivate: () => void;
-  closeOnActivate: boolean;
-  isActive: boolean;
-}
-
-/**
- * 
- * @typedef {object} ConstructorArgs
  * @description Constructor arguments for Header
- * @property {HeaderData} data - Previously saved data
- * @property {HeaderConfig} config - User config for the tool
- * @property {object} api - Editor.js API
- * @property {boolean} readOnly - Read-only mode flag
  */
 interface ConstructorArgs {
+  /** Previously saved data */
   data: HeaderData;
+  /** User config for the tool */
   config: HeaderConfig;
-  api: any;
+  /** Editor.js API */
+  api: API;
+  /** Read-only mode flag */
   readOnly: boolean;
 }
 
@@ -120,27 +72,35 @@ export default class Header {
    *   api - Editor.js API
    *   readOnly - read only mode flag
    */
-  
-  private api: any;
+  /**
+   * Editor.js API
+  * @private
+  */
+  private api: API;
+  /**
+  * Read-only mode flag
+  * @private
+  */
   private readOnly: boolean;
-  private _CSS: ToolSettings;
+  /**
+  * Tool's settings passed from Editor
+  * @private
+  */
   private _settings: HeaderConfig;
+  /**
+  * Block's data
+  * @private
+  */
   private _data: HeaderData;
+  /**
+  * Main Block wrapper
+  * @private
+  */
   private _element: HTMLHeadingElement;
 
   constructor({ data, config, api, readOnly }: ConstructorArgs) {
     this.api = api;
     this.readOnly = readOnly;
-
-    /**
-     * Styles
-     *
-     * @type {object}
-     */
-    this._CSS = {
-      block: this.api.styles.block,
-      wrapper: 'ce-header',
-    };
 
     /**
      * Tool's settings passed from Editor
@@ -165,6 +125,15 @@ export default class Header {
      * @private
      */
     this._element = this.getTag();
+  }
+  /**
+   * Styles
+   */
+  private get _CSS() {
+    return {
+      block: this.api.styles.block,
+      wrapper: 'ce-header',
+    };
   }
 
   /**
@@ -210,6 +179,7 @@ export default class Header {
       onActivate: () => this.setLevel(level.number),
       closeOnActivate: true,
       isActive: this.currentLevel.number === level.number,
+      render: () => document.createElement('div')
     }));
   }
 
@@ -485,7 +455,7 @@ export default class Header {
     ];
 
     return this._settings.levels ? availableLevels.filter(
-      l => this._settings.levels?.includes(l.number)
+      l => this._settings.levels!.includes(l.number)
     ) : availableLevels;
   }
 
@@ -495,47 +465,50 @@ export default class Header {
    * @param {PasteEvent} event - event with pasted content
    */
   onPaste(event: PasteEvent): void {
-    const content = event.detail.data;
+    const detail = event.detail;
 
-    /**
-     * Define default level value
-     *
-     * @type {number}
-     */
-    let level = this.defaultLevel.number;
+    if ('data' in detail) {
+      const content = detail.data as HTMLElement;
+      /**
+       * Define default level value
+       *
+       * @type {number}
+       */
+      let level = this.defaultLevel.number;
 
-    switch (content.tagName) {
-      case 'H1':
-        level = 1;
-        break;
-      case 'H2':
-        level = 2;
-        break;
-      case 'H3':
-        level = 3;
-        break;
-      case 'H4':
-        level = 4;
-        break;
-      case 'H5':
-        level = 5;
-        break;
-      case 'H6':
-        level = 6;
-        break;
+      switch (content.tagName) {
+        case 'H1':
+          level = 1;
+          break;
+        case 'H2':
+          level = 2;
+          break;
+        case 'H3':
+          level = 3;
+          break;
+        case 'H4':
+          level = 4;
+          break;
+        case 'H5':
+          level = 5;
+          break;
+        case 'H6':
+          level = 6;
+          break;
+      }
+
+      if (this._settings.levels) {
+        // Fallback to nearest level when specified not available
+        level = this._settings.levels.reduce((prevLevel, currLevel) => {
+          return Math.abs(currLevel - level) < Math.abs(prevLevel - level) ? currLevel : prevLevel;
+        });
+      }
+
+      this.data = {
+        level,
+        text: content.innerHTML,
+      };
     }
-
-    if (this._settings.levels) {
-      // Fallback to nearest level when specified not available
-      level = this._settings.levels.reduce((prevLevel, currLevel) => {
-        return Math.abs(currLevel - level) < Math.abs(prevLevel - level) ? currLevel : prevLevel;
-      });
-    }
-
-    this.data = {
-      level,
-      text: content.innerHTML,
-    };
   }
 
   /**

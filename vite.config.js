@@ -1,7 +1,7 @@
 import path from "path";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 import * as pkg from "./package.json";
-import typescript from '@rollup/plugin-typescript';
+import dts from 'vite-plugin-dts';
 
 const NODE_ENV = process.argv.mode || "development";
 const VERSION = pkg.version;
@@ -21,7 +21,7 @@ export default {
   },
 
   plugins: [cssInjectedByJsPlugin(),
-    typescript({
+    dts({
       tsconfig: './tsconfig.json'
     })],
 };
