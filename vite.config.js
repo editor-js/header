@@ -22,6 +22,6 @@ export default {
 
   plugins: [cssInjectedByJsPlugin(),
     dts({
-      tsconfig: './tsconfig.json'
+      tsconfigPath: './tsconfig.json'
     })],
 };
