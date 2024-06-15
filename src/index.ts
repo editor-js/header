@@ -4,21 +4,55 @@
 import './index.css';
 
 import { IconH1, IconH2, IconH3, IconH4, IconH5, IconH6, IconHeading } from '@codexteam/icons';
+import { API, BlockTune, PasteEvent } from '@editorjs/editorjs';
 
 /**
- * @typedef {object} HeaderData
- * @description Tool's input and output data format
- * @property {string} text — Header's content
- * @property {number} level - Header's level from 1 to 6
- */
+* @description Tool's input and output data format
+*/
+export interface HeaderData {
+  /** Header's content */
+  text: string;
+  /** Header's level from 1 to 6 */
+  level: number;
+}
 
 /**
- * @typedef {object} HeaderConfig
  * @description Tool's config from Editor
- * @property {string} placeholder — Block's placeholder
- * @property {number[]} levels — Heading levels
- * @property {number} defaultLevel — default level
  */
+export interface HeaderConfig {
+  /** Block's placeholder */
+  placeholder?: string;
+  /** Heading levels */
+  levels?: number[];
+  /** Default level */
+  defaultLevel?: number;
+}
+
+/**
+ * @description Heading level information
+ */
+interface Level {
+  /** Level number */
+  number: number;
+  /** HTML tag corresponding with level number */
+  tag: string;
+  /** Icon */
+  svg: string;
+}
+
+/**
+ * @description Constructor arguments for Header
+ */
+interface ConstructorArgs {
+  /** Previously saved data */
+  data: HeaderData;
+  /** User config for the tool */
+  config: HeaderConfig;
+  /** Editor.js API */
+  api: API;
+  /** Read-only mode flag */
+  readOnly: boolean;
+}
 
 /**
  * Header block for the Editor.js.
@@ -38,19 +72,35 @@ export default class Header {
    *   api - Editor.js API
    *   readOnly - read only mode flag
    */
-  constructor({ data, config, api, readOnly }) {
+  /**
+   * Editor.js API
+  * @private
+  */
+  private api: API;
+  /**
+  * Read-only mode flag
+  * @private
+  */
+  private readOnly: boolean;
+  /**
+  * Tool's settings passed from Editor
+  * @private
+  */
+  private _settings: HeaderConfig;
+  /**
+  * Block's data
+  * @private
+  */
+  private _data: HeaderData;
+  /**
+  * Main Block wrapper
+  * @private
+  */
+  private _element: HTMLHeadingElement;
+
+  constructor({ data, config, api, readOnly }: ConstructorArgs) {
     this.api = api;
     this.readOnly = readOnly;
-
-    /**
-     * Styles
-     *
-     * @type {object}
-     */
-    this._CSS = {
-      block: this.api.styles.block,
-      wrapper: 'ce-header',
-    };
 
     /**
      * Tool's settings passed from Editor
@@ -76,6 +126,15 @@ export default class Header {
      */
     this._element = this.getTag();
   }
+  /**
+   * Styles
+   */
+  private get _CSS() {
+    return {
+      block: this.api.styles.block,
+      wrapper: 'ce-header',
+    };
+  }
 
   /**
    * Normalize input data
@@ -85,15 +144,15 @@ export default class Header {
    * @returns {HeaderData}
    * @private
    */
-  normalizeData(data) {
-    const newData = {};
+  normalizeData(data: HeaderData): HeaderData {
+    const newData: HeaderData = {text: '', level: this.defaultLevel.number };
 
     if (typeof data !== 'object') {
-      data = {};
+      data = {} as HeaderData;
     }
 
     newData.text = data.text || '';
-    newData.level = parseInt(data.level) || this.defaultLevel.number;
+    newData.level = parseInt(data.level.toString()) || this.defaultLevel.number;
 
     return newData;
   }
@@ -104,7 +163,7 @@ export default class Header {
    * @returns {HTMLHeadingElement}
    * @public
    */
-  render() {
+  render(): HTMLHeadingElement {
     return this._element;
   }
 
@@ -113,13 +172,14 @@ export default class Header {
    *
    * @returns {Array}
    */
-  renderSettings() {
+  renderSettings(): BlockTune[] {
     return this.levels.map(level => ({
       icon: level.svg,
       label: this.api.i18n.t(`Heading ${level.number}`),
       onActivate: () => this.setLevel(level.number),
       closeOnActivate: true,
       isActive: this.currentLevel.number === level.number,
+      render: () => document.createElement('div')
     }));
   }
 
@@ -128,7 +188,7 @@ export default class Header {
    *
    * @param {number} level - level to set
    */
-  setLevel(level) {
+  setLevel(level: number): void {
     this.data = {
       level: level,
       text: this.data.text,
@@ -142,7 +202,7 @@ export default class Header {
    * @param {HeaderData} data - saved data to merger with current block
    * @public
    */
-  merge(data) {
+  merge(data: HeaderData): void {
     const newData = {
       text: this.data.text + data.text,
       level: this.data.level,
@@ -159,7 +219,7 @@ export default class Header {
    * @returns {boolean} false if saved data is not correct, otherwise true
    * @public
    */
-  validate(blockData) {
+  validate(blockData: HeaderData): boolean {
     return blockData.text.trim() !== '';
   }
 
@@ -170,7 +230,7 @@ export default class Header {
    * @returns {HeaderData} - saved data
    * @public
    */
-  save(toolsContent) {
+  save(toolsContent: HTMLHeadingElement): HeaderData {
     return {
       text: toolsContent.innerHTML,
       level: this.currentLevel.number,
@@ -212,7 +272,7 @@ export default class Header {
    * @returns {HeaderData} Current data
    * @private
    */
-  get data() {
+  get data(): HeaderData {
     this._data.text = this._element.innerHTML;
     this._data.level = this.currentLevel.number;
 
@@ -227,7 +287,7 @@ export default class Header {
    * @param {HeaderData} data — data to set
    * @private
    */
-  set data(data) {
+  set data(data: HeaderData) {
     this._data = this.normalizeData(data);
 
     /**
@@ -275,11 +335,11 @@ export default class Header {
    *
    * @returns {HTMLElement}
    */
-  getTag() {
+  getTag(): HTMLHeadingElement {
     /**
      * Create element for current Block's level
      */
-    const tag = document.createElement(this.currentLevel.tag);
+    const tag = document.createElement(this.currentLevel.tag) as HTMLHeadingElement;
 
     /**
      * Add text to block
@@ -309,7 +369,7 @@ export default class Header {
    *
    * @returns {level}
    */
-  get currentLevel() {
+  get currentLevel(): Level {
     let level = this.levels.find(levelItem => levelItem.number === this._data.level);
 
     if (!level) {
@@ -324,7 +384,7 @@ export default class Header {
    *
    * @returns {level}
    */
-  get defaultLevel() {
+  get defaultLevel(): Level {
     /**
      * User can specify own default level value
      */
@@ -360,7 +420,7 @@ export default class Header {
    *
    * @returns {level[]}
    */
-  get levels() {
+  get levels(): Level[] {
     const availableLevels = [
       {
         number: 1,
@@ -395,7 +455,7 @@ export default class Header {
     ];
 
     return this._settings.levels ? availableLevels.filter(
-      l => this._settings.levels.includes(l.number)
+      l => this._settings.levels!.includes(l.number)
     ) : availableLevels;
   }
 
@@ -404,48 +464,51 @@ export default class Header {
    *
    * @param {PasteEvent} event - event with pasted content
    */
-  onPaste(event) {
-    const content = event.detail.data;
+  onPaste(event: PasteEvent): void {
+    const detail = event.detail;
 
-    /**
-     * Define default level value
-     *
-     * @type {number}
-     */
-    let level = this.defaultLevel.number;
+    if ('data' in detail) {
+      const content = detail.data as HTMLElement;
+      /**
+       * Define default level value
+       *
+       * @type {number}
+       */
+      let level = this.defaultLevel.number;
 
-    switch (content.tagName) {
-      case 'H1':
-        level = 1;
-        break;
-      case 'H2':
-        level = 2;
-        break;
-      case 'H3':
-        level = 3;
-        break;
-      case 'H4':
-        level = 4;
-        break;
-      case 'H5':
-        level = 5;
-        break;
-      case 'H6':
-        level = 6;
-        break;
+      switch (content.tagName) {
+        case 'H1':
+          level = 1;
+          break;
+        case 'H2':
+          level = 2;
+          break;
+        case 'H3':
+          level = 3;
+          break;
+        case 'H4':
+          level = 4;
+          break;
+        case 'H5':
+          level = 5;
+          break;
+        case 'H6':
+          level = 6;
+          break;
+      }
+
+      if (this._settings.levels) {
+        // Fallback to nearest level when specified not available
+        level = this._settings.levels.reduce((prevLevel, currLevel) => {
+          return Math.abs(currLevel - level) < Math.abs(prevLevel - level) ? currLevel : prevLevel;
+        });
+      }
+
+      this.data = {
+        level,
+        text: content.innerHTML,
+      };
     }
-
-    if (this._settings.levels) {
-      // Fallback to nearest level when specified not available
-      level = this._settings.levels.reduce((prevLevel, currLevel) => {
-        return Math.abs(currLevel - level) < Math.abs(prevLevel - level) ? currLevel : prevLevel;
-      });
-    }
-
-    this.data = {
-      level,
-      text: content.innerHTML,
-    };
   }
 
   /**
