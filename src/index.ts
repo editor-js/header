@@ -19,7 +19,7 @@ export interface HeaderData {
 /**
  * @description Tool's config from Editor
  */
-interface HeaderConfig {
+export interface HeaderConfig {
   /** Block's placeholder */
   placeholder?: string;
   /** Heading levels */
