@@ -6,12 +6,6 @@ on:
       - master
 
 jobs:
-  publish-and-notify:
-    uses: codex-team/github-workflows/.github/workflows/npm-publish-and-notify-reusable.yml@main
-    secrets:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      CODEX_BOT_NOTIFY_EDITORJS_PUBLIC_CHAT: ${{ secrets.CODEX_BOT_NOTIFY_EDITORJS_PUBLIC_CHAT }}
-  
   build:
     runs-on: ubuntu-latest
     steps:
@@ -24,3 +18,10 @@ jobs:
         run: yarn install
       - name: Build
         run: yarn build
+
+  publish-and-notify:
+    uses: codex-team/github-workflows/.github/workflows/npm-publish-and-notify-reusable.yml@main
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      CODEX_BOT_NOTIFY_EDITORJS_PUBLIC_CHAT: ${{ secrets.CODEX_BOT_NOTIFY_EDITORJS_PUBLIC_CHAT }}
+  
