@@ -152,7 +152,7 @@ export default class Header {
     }
 
     newData.text = data.text || '';
-    newData.level = parseInt(data.level.toString()) || this.defaultLevel.number;
+    newData.level = data && data.level? parseInt(data.level.toString()) : this.defaultLevel.number;
 
     return newData;
   }
