@@ -11,3 +11,4 @@ jobs:
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       CODEX_BOT_NOTIFY_EDITORJS_PUBLIC_CHAT: ${{ secrets.CODEX_BOT_NOTIFY_EDITORJS_PUBLIC_CHAT }}
+  
