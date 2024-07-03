@@ -148,7 +148,7 @@ export default class Header {
     const newData: HeaderData = {text: '', level: this.defaultLevel.number };
 
     if (typeof data !== 'object') {
-      data = {} as HeaderData;
+      data = {text: '', level: this.defaultLevel.number};
     }
 
     newData.text = data.text || '';
