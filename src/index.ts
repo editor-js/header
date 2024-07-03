@@ -145,14 +145,14 @@ export default class Header {
    * @private
    */
   normalizeData(data: HeaderData): HeaderData {
-    const newData: HeaderData = {text: '', level: this.defaultLevel.number };
+    const newData: HeaderData = { text: '', level: this.defaultLevel.number };
 
     if (typeof data !== 'object') {
-      data = {text: '', level: this.defaultLevel.number};
+      data = { text: '', level: this.defaultLevel.number};
     }
 
     newData.text = data.text || '';
-    newData.level = parseInt(data.level.toString()) || this.defaultLevel.number;
+    newData.level = data.level ? parseInt(data.level.toString()) : this.defaultLevel.number;
 
     return newData;
   }
