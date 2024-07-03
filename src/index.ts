@@ -148,11 +148,11 @@ export default class Header {
     const newData: HeaderData = {text: '', level: this.defaultLevel.number };
 
     if (typeof data !== 'object') {
-      data = {} as HeaderData;
+      data = {text: '', level: this.defaultLevel.number};
     }
 
     newData.text = data.text || '';
-    newData.level = data && data.level? parseInt(data.level.toString()) : this.defaultLevel.number;
+    newData.level = parseInt(data.level.toString()) || this.defaultLevel.number;
 
     return newData;
   }
