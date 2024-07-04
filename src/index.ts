@@ -159,11 +159,11 @@ export default class Header {
     const newData: HeaderData = { text: '', level: this.defaultLevel.number };
 
     if (!this.isHeaderData(data)) {
-      data = { text: '', level: this.defaultLevel.number};
+      return { text: '', level: this.defaultLevel.number};
     }
 
-    newData.text = (data as HeaderData).text || '';
-    newData.level = parseInt((data as HeaderData).level.toString()) || this.defaultLevel.number;
+    newData.text = data.text || '';
+    newData.level = parseInt(data.level.toString()) || this.defaultLevel.number;
 
     return newData;
   }
