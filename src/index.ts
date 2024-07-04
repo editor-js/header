@@ -45,7 +45,7 @@ interface Level {
  */
 interface ConstructorArgs {
   /** Previously saved data */
-  data: HeaderData;
+  data: HeaderData | {};
   /** User config for the tool */
   config: HeaderConfig;
   /** Editor.js API */
@@ -137,6 +137,17 @@ export default class Header {
   }
 
   /**
+   * Check if data is valid
+   * 
+   * @param {any} data - data to check
+   * @returns {data is HeaderData}
+   * @private
+   */
+  isHeaderData(data: any): data is HeaderData {
+    return (data as HeaderData).text !== undefined && (data as HeaderData).level !== undefined;
+  }
+
+  /**
    * Normalize input data
    *
    * @param {HeaderData} data - saved data to process
@@ -144,11 +155,11 @@ export default class Header {
    * @returns {HeaderData}
    * @private
    */
-  normalizeData(data: HeaderData): HeaderData {
-    const newData: HeaderData = {text: '', level: this.defaultLevel.number };
+  normalizeData(data: HeaderData | {}): HeaderData {
+    const newData: HeaderData = { text: '', level: this.defaultLevel.number };
 
-    if (typeof data !== 'object') {
-      data = {text: '', level: this.defaultLevel.number};
+    if (!this.isHeaderData(data)) {
+      return { text: '', level: this.defaultLevel.number};
     }
 
     newData.text = data.text || '';
@@ -275,7 +286,7 @@ export default class Header {
   get data(): HeaderData {
     this._data.text = this._element.innerHTML;
     this._data.level = this.currentLevel.number;
-
+    
     return this._data;
   }
 
