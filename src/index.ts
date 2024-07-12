@@ -144,7 +144,7 @@ export default class Header {
    * @private
    */
   isHeaderData(data: any): data is HeaderData {
-    return (data as HeaderData).text !== undefined && (data as HeaderData).level !== undefined;
+    return (data as HeaderData).text !== undefined;
   }
 
   /**
@@ -158,12 +158,13 @@ export default class Header {
   normalizeData(data: HeaderData | {}): HeaderData {
     const newData: HeaderData = { text: '', level: this.defaultLevel.number };
 
-    if (!this.isHeaderData(data)) {
-      return { text: '', level: this.defaultLevel.number};
+    if (this.isHeaderData(data)) {
+      newData.text = data.text || '';
+  
+      if (data.level !== undefined && !isNaN(parseInt(data.level.toString()))) {
+        newData.level = parseInt(data.level.toString());
+      }
     }
-
-    newData.text = data.text || '';
-    newData.level = parseInt(data.level.toString()) || this.defaultLevel.number;
 
     return newData;
   }
