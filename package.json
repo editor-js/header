@@ -1,13 +1,14 @@
 {
   "name": "@editorjs/header",
-  "version": "2.8.6",
+  "version": "2.8.7",
   "keywords": [
     "codex editor",
     "header",
+    "heading",
     "editor.js",
     "editorjs"
   ],
-  "description": "Header Tool for Editor.js",
+  "description": "Heading Tool for Editor.js",
   "license": "MIT",
   "repository": "https://github.com/editor-js/header",
   "files": [
