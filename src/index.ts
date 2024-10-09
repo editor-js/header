@@ -215,12 +215,7 @@ export default class Header {
    * @public
    */
   merge(data: HeaderData): void {
-    const newData = {
-      text: this.data.text + data.text,
-      level: this.data.level,
-    };
-
-    this.data = newData;
+    this._element.insertAdjacentHTML('beforeend', data.text)
   }
 
   /**
