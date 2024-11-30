@@ -12,10 +12,10 @@
   resolved "https://registry.yarnpkg.com/@codexteam/icons/-/icons-0.0.5.tgz#d17f39b6a0497c6439f57dd42711817a3dd3679c"
   integrity sha512-s6H2KXhLz2rgbMZSkRm8dsMJvyUNZsEjxobBEg9ztdrb1B2H3pEzY6iTwI4XUPJWJ3c3qRKwV4TrO3J5jUdoQA==
 
-"@editorjs/editorjs@^2.29.1":
-  version "2.29.1"
-  resolved "https://registry.yarnpkg.com/@editorjs/editorjs/-/editorjs-2.29.1.tgz#d7c644c5c3fc1ea1022373cbf2c8c3ac9f990b7b"
-  integrity sha512-WRT2pCfikMsvySQJqpCU21LfTZaPuxUWsDO8aFGrPx4MKzOR9D+Ur4mNb3jq0FXx2EMqvIWfTyFixJxtjGHTyQ==
+"@editorjs/editorjs@^2.30.7":
+  version "2.30.7"
+  resolved "https://registry.yarnpkg.com/@editorjs/editorjs/-/editorjs-2.30.7.tgz#6ba210490c1040c55ef7e5ef040c4c6e3dc722e7"
+  integrity sha512-FfdeUqrgcKWC+Cy2GW6Dxup6s2TaRKokR4FL+HKXshu6h9Y//rrx4SQkURgkZOCSbV77t9btbmAXdFXWGB+diw==
 
 "@esbuild/android-arm64@0.18.20":
   version "0.18.20"
