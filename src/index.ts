@@ -367,7 +367,7 @@ export default class Header implements BlockTool {
     /**
      * Add Placeholder
      */
-    tag.dataset.placeholder = this.api.i18n.t(this?._config?.placeholder || '');
+    tag.dataset.placeholder = this.api.i18n.t(this._config?.placeholder || '');
 
     return tag;
   }
@@ -396,9 +396,9 @@ export default class Header implements BlockTool {
     /**
      * User can specify own default level value
      */
-    if (this?._config?.defaultLevel) {
+    if (this._config?.defaultLevel) {
       const userSpecified = this.levels.find(levelItem => {
-        return levelItem.number === this?._config?.defaultLevel;
+        return levelItem.number === this._config?.defaultLevel;
       });
 
       if (userSpecified) {
@@ -462,8 +462,8 @@ export default class Header implements BlockTool {
       },
     ];
 
-    return this?._config?.levels ? availableLevels.filter(
-      l => this?._config?.levels!.includes(l.number)
+    return this._config?.levels ? availableLevels.filter(
+      l => this._config?.levels!.includes(l.number)
     ) : availableLevels;
   }
 
@@ -505,9 +505,9 @@ export default class Header implements BlockTool {
           break;
       }
 
-      if (this?._config?.levels) {
+      if (this._config?.levels) {
         // Fallback to nearest level when specified not available
-        level = this?._config?.levels.reduce((prevLevel, currLevel) => {
+        level = this._config?.levels.reduce((prevLevel, currLevel) => {
           return Math.abs(currLevel - level) < Math.abs(prevLevel - level) ? currLevel : prevLevel;
         });
       }
