@@ -1,546 +1,313 @@
+import type { ToolConfig } from '@editorjs/editorjs';
+import type {
+  BlockTool,
+  BlockToolConstructor,
+  BlockToolConstructorOptions,
+  BlockToolData,
+  BlockToolOptions,
+  TextNodeSerialized
+} from '@editorjs/sdk';
+import {
+  KeyAddedEvent,
+  KeyRemovedEvent,
+  ToolType,
+  ValueNodeChangedEvent
+} from '@editorjs/sdk';
+import type { DOMBlockToolAdapter } from '@editorjs/dom-adapters';
+import { IconH1, IconH2, IconH3, IconH4, IconH5, IconH6 } from '@codexteam/icons';
+import styles from './index.module.pcss';
+
 /**
- * Build styles
+ * Heading levels supported by the Header tool
  */
-import './index.css';
-
-import { IconH1, IconH2, IconH3, IconH4, IconH5, IconH6, IconHeading } from '@codexteam/icons';
-import { API, BlockTune, PasteEvent } from '@editorjs/editorjs';
+export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
 /**
-* @description Tool's input and output data format
-*/
-export interface HeaderData {
-  /** Header's content */
-  text: string;
-  /** Header's level from 1 to 6 */
-  level: number;
-}
-
-/**
- * @description Tool's config from Editor
+ * Data structure describing the tool's input/output data
  */
-export interface HeaderConfig {
-  /** Block's placeholder */
+export type HeaderData = BlockToolData<{
+  /**
+   * Text content of the heading
+   */
+  text: TextNodeSerialized;
+
+  /**
+   * Heading level (1–6)
+   */
+  level: HeadingLevel;
+}>;
+
+/**
+ * User-end configuration for the tool
+ */
+export type HeaderConfig = ToolConfig<{
+  /**
+   * Placeholder for an empty heading
+   */
   placeholder?: string;
-  /** Heading levels */
-  levels?: number[];
-  /** Default level */
-  defaultLevel?: number;
+
+  /**
+   * Fallback heading level used when the persisted or provided level is missing or invalid
+   */
+  defaultLevel?: HeadingLevel;
+
+  /**
+   * Heading levels available to the user
+   */
+  levels?: HeadingLevel[];
+}>;
+
+/**
+ * All heading levels the tool structurally supports
+ */
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers -- self-evident from the comment above
+const ALL_LEVELS: readonly HeadingLevel[] = [1, 2, 3, 4, 5, 6];
+const LEVEL_ICONS = [IconH1, IconH2, IconH3, IconH4, IconH5, IconH6];
+
+/**
+ * Resolves which levels are allowed for a given config, falling back to all levels when
+ * `levels` is missing or has no valid entries. Kept as a standalone function since both
+ * the constructor and the static {@link Header.options} factory need it.
+ * @param levels - candidate levels from {@link HeaderConfig.levels}
+ */
+function resolveLevels(levels: HeadingLevel[] | undefined): readonly HeadingLevel[] {
+  if (levels === undefined) {
+    return ALL_LEVELS;
+  }
+
+  const valid = levels.filter(level => ALL_LEVELS.includes(level));
+
+  return valid.length > 0 ? valid : ALL_LEVELS;
 }
 
 /**
- * @description Heading level information
+ * Header block tool
  */
-interface Level {
-  /** Level number */
-  number: number;
-  /** HTML tag corresponding with level number */
-  tag: string;
-  /** Icon */
-  svg: string;
+export class Header implements BlockTool<HeaderData, HeaderConfig> {
+  /**
+   * Tool type — Header is a Block Tool
+   */
+  public static type = ToolType.Block as const;
+
+  /**
+   * Tool name used to register and identify it within the editor
+   */
+  public static name = 'header';
+
+  /**
+   * Heading level used when neither persisted data, config's defaultLevel, nor config's
+   * levels resolve to a valid choice
+   */
+  static readonly #defaultLevel: HeadingLevel = 2;
+
+  /**
+   * Adapter for linking block data with the DOM
+   */
+  #adapter: DOMBlockToolAdapter;
+
+  /**
+   * User-end configuration passed to the tool
+   */
+  #config: HeaderConfig;
+
+  /**
+   * Levels allowed by {@link HeaderConfig.levels}, resolved once at construction
+   */
+  #levels: readonly HeadingLevel[];
+
+  /**
+   * Currently applied heading level
+   */
+  #currentLevel: HeadingLevel;
+
+  /**
+   * Tool's wrapper element, created lazily on first {@link render} call
+   */
+  #wrapper: HTMLDivElement | undefined;
+
+  /**
+   * Heading input element, created lazily once the model registers the "text" key
+   */
+  #headingEl: HTMLElement | undefined;
+
+  /**
+   * @param options - Block tool constructor options
+   */
+  constructor({
+    adapter,
+    data,
+    config,
+  }: BlockToolConstructorOptions<
+    HeaderData,
+    HeaderConfig,
+    DOMBlockToolAdapter
+  >) {
+    this.#adapter = adapter;
+    this.#config = config ?? ({} as HeaderConfig);
+    this.#levels = resolveLevels(this.#config.levels);
+
+    const level = this.#normalizeLevel(data?.level);
+
+    this.#currentLevel = level;
+
+    /**
+     * addEventListener must be called before registerTextInputKey/registerValueKey —
+     * those synchronously fire a DataNodeAddedEvent, which the adapter turns into a
+     * KeyAddedEvent. If the listener isn't attached yet, that event is lost.
+     */
+    adapter.addEventListener('adapter:updated', this.#onUpdate);
+    adapter.registerTextInputKey('text', data?.text);
+    adapter.registerValueKey<HeadingLevel>('level', level);
+  }
+
+  /**
+   * Static tool options: toolbox entries, conversion config, and split behavior
+   *
+   * A factory rather than a plain object, so the toolbox can offer exactly the levels
+   * {@link HeaderConfig.levels} allows instead of a fixed set decided before any config
+   * exists.
+   * @param config - config supplied to `use(Header, { config })`, or `{}` if omitted
+   */
+  public static readonly options = (config: HeaderConfig): BlockToolOptions<HeaderConfig, HeaderData> => ({
+    /**
+     * One toolbox entry per level allowed by config.levels (all six when omitted)
+     */
+    toolbox: resolveLevels(config.levels).map(level => ({
+      title: `Heading ${level}`,
+      icon: LEVEL_ICONS[level - 1],
+      data: { level },
+    })),
+
+    /**
+     * Maps the block's text content to/from the shared "text" conversion key
+     */
+    conversionConfig: {
+      import: 'text',
+      export: 'text',
+    },
+
+    /**
+     * Header blocks can't be split into two header blocks
+     */
+    canBeSplit: false as const,
+  });
+
+  /**
+   * Returns tool's wrapper, creating it if it doesn't exist yet.
+   * As we maintain the data-first approach, actual inputs should be rendered only when the model is updated.
+   */
+  public render(): HTMLElement {
+    if (this.#wrapper === undefined) {
+      this.#wrapper = document.createElement('div');
+    }
+
+    return this.#wrapper;
+  }
+
+  /**
+   * Normalizes a raw value to a valid HeadingLevel allowed by {@link HeaderConfig.levels},
+   * falling back to {@link HeaderConfig.defaultLevel} or the tool default.
+   * @param raw - Candidate level to validate; not guaranteed to be a number, an integer, or an allowed level
+   */
+  #normalizeLevel(raw: unknown): HeadingLevel {
+    if (
+      typeof raw === 'number'
+      && Number.isInteger(raw)
+      && this.#levels.includes(raw as HeadingLevel)
+    ) {
+      return raw as HeadingLevel;
+    }
+    const fallback = this.#config.defaultLevel;
+
+    if (
+      fallback !== undefined
+      && Number.isInteger(fallback)
+      && this.#levels.includes(fallback)
+    ) {
+      return fallback;
+    }
+
+    return this.#levels.includes(Header.#defaultLevel) ? Header.#defaultLevel : this.#levels[0];
+  }
+
+  /**
+   * Creates a heading element for the given level
+   * @param level - heading level to create an element for
+   */
+  #createHeadingEl(level: HeadingLevel): HTMLElement {
+    const el = document.createElement(`h${level}`);
+
+    el.classList.add(styles.header);
+    el.contentEditable = 'true';
+
+    return el;
+  }
+
+  /**
+   * Replaces the current heading element with one of a new level, preserving the DOM position
+   * @param level - heading level to swap to
+   */
+  #swapHeadingTag(level: HeadingLevel): void {
+    if (this.#headingEl === undefined) {
+      return;
+    }
+    const newEl = this.#createHeadingEl(level);
+
+    this.#headingEl.replaceWith(newEl);
+    this.#headingEl = newEl;
+    this.#adapter.setInput('text', newEl);
+  }
+
+  /**
+   * Callback for Adapter updates
+   * @param event - adapter event (KeyAdded, KeyRemoved or ValueChanged)
+   */
+  #onUpdate = (event: Event): void => {
+    switch (true) {
+      case event instanceof KeyAddedEvent: {
+        if (event.detail.key !== 'text') {
+          break;
+        }
+        const el = this.#createHeadingEl(this.#currentLevel);
+
+        this.#headingEl = el;
+        this.#wrapper?.append(el);
+        this.#adapter.setInput('text', el);
+
+        break;
+      }
+
+      case event instanceof KeyRemovedEvent: {
+        if (event.detail.key !== 'text') {
+          break;
+        }
+        this.#adapter.setInput('text', undefined);
+        this.#headingEl?.remove();
+        this.#headingEl = undefined;
+
+        break;
+      }
+
+      case event instanceof ValueNodeChangedEvent: {
+        if (event.detail.key !== 'level') {
+          break;
+        }
+        const newLevel = this.#normalizeLevel(event.detail.value);
+
+        if (newLevel === this.#currentLevel) {
+          break;
+        }
+        this.#currentLevel = newLevel;
+        this.#swapHeadingTag(newLevel);
+
+        break;
+      }
+    }
+  };
 }
 
-/**
- * @description Constructor arguments for Header
- */
-interface ConstructorArgs {
-  /** Previously saved data */
-  data: HeaderData | {};
-  /** User config for the tool */
-  config: HeaderConfig;
-  /** Editor.js API */
-  api: API;
-  /** Read-only mode flag */
-  readOnly: boolean;
-}
-
-/**
- * Header block for the Editor.js.
- *
- * @author CodeX (team@ifmo.su)
- * @copyright CodeX 2018
- * @license MIT
- * @version 2.0.0
- */
-export default class Header {
-  /**
-   * Render plugin`s main Element and fill it with saved data
-   *
-   * @param {{data: HeaderData, config: HeaderConfig, api: object}}
-   *   data — previously saved data
-   *   config - user config for Tool
-   *   api - Editor.js API
-   *   readOnly - read only mode flag
-   */
-  /**
-   * Editor.js API
-  * @private
-  */
-  private api: API;
-  /**
-  * Read-only mode flag
-  * @private
-  */
-  private readOnly: boolean;
-  /**
-  * Tool's settings passed from Editor
-  * @private
-  */
-  private _settings: HeaderConfig;
-  /**
-  * Block's data
-  * @private
-  */
-  private _data: HeaderData;
-  /**
-  * Main Block wrapper
-  * @private
-  */
-  private _element: HTMLHeadingElement;
-
-  constructor({ data, config, api, readOnly }: ConstructorArgs) {
-    this.api = api;
-    this.readOnly = readOnly;
-
-    /**
-     * Tool's settings passed from Editor
-     *
-     * @type {HeaderConfig}
-     * @private
-     */
-    this._settings = config;
-
-    /**
-     * Block's data
-     *
-     * @type {HeaderData}
-     * @private
-     */
-    this._data = this.normalizeData(data);
-
-    /**
-     * Main Block wrapper
-     *
-     * @type {HTMLElement}
-     * @private
-     */
-    this._element = this.getTag();
-  }
-  /**
-   * Styles
-   */
-  private get _CSS() {
-    return {
-      block: this.api.styles.block,
-      wrapper: 'ce-header',
-    };
-  }
-
-  /**
-   * Check if data is valid
-   * 
-   * @param {any} data - data to check
-   * @returns {data is HeaderData}
-   * @private
-   */
-  isHeaderData(data: any): data is HeaderData {
-    return (data as HeaderData).text !== undefined;
-  }
-
-  /**
-   * Normalize input data
-   *
-   * @param {HeaderData} data - saved data to process
-   *
-   * @returns {HeaderData}
-   * @private
-   */
-  normalizeData(data: HeaderData | {}): HeaderData {
-    const newData: HeaderData = { text: '', level: this.defaultLevel.number };
-
-    if (this.isHeaderData(data)) {
-      newData.text = data.text || '';
-  
-      if (data.level !== undefined && !isNaN(parseInt(data.level.toString()))) {
-        newData.level = parseInt(data.level.toString());
-      }
-    }
-
-    return newData;
-  }
-
-  /**
-   * Return Tool's view
-   *
-   * @returns {HTMLHeadingElement}
-   * @public
-   */
-  render(): HTMLHeadingElement {
-    return this._element;
-  }
-
-  /**
-   * Returns header block tunes config
-   *
-   * @returns {Array}
-   */
-  renderSettings(): BlockTune[] {
-    return this.levels.map(level => ({
-      icon: level.svg,
-      label: this.api.i18n.t(`Heading ${level.number}`),
-      onActivate: () => this.setLevel(level.number),
-      closeOnActivate: true,
-      isActive: this.currentLevel.number === level.number,
-      render: () => document.createElement('div')
-    }));
-  }
-
-  /**
-   * Callback for Block's settings buttons
-   *
-   * @param {number} level - level to set
-   */
-  setLevel(level: number): void {
-    this.data = {
-      level: level,
-      text: this.data.text,
-    };
-  }
-
-  /**
-   * Method that specified how to merge two Text blocks.
-   * Called by Editor.js by backspace at the beginning of the Block
-   *
-   * @param {HeaderData} data - saved data to merger with current block
-   * @public
-   */
-  merge(data: HeaderData): void {
-    this._element.insertAdjacentHTML('beforeend', data.text)
-  }
-
-  /**
-   * Validate Text block data:
-   * - check for emptiness
-   *
-   * @param {HeaderData} blockData — data received after saving
-   * @returns {boolean} false if saved data is not correct, otherwise true
-   * @public
-   */
-  validate(blockData: HeaderData): boolean {
-    return blockData.text.trim() !== '';
-  }
-
-  /**
-   * Extract Tool's data from the view
-   *
-   * @param {HTMLHeadingElement} toolsContent - Text tools rendered view
-   * @returns {HeaderData} - saved data
-   * @public
-   */
-  save(toolsContent: HTMLHeadingElement): HeaderData {
-    return {
-      text: toolsContent.innerHTML,
-      level: this.currentLevel.number,
-    };
-  }
-
-  /**
-   * Allow Header to be converted to/from other blocks
-   */
-  static get conversionConfig() {
-    return {
-      export: 'text', // use 'text' property for other blocks
-      import: 'text', // fill 'text' property from other block's export string
-    };
-  }
-
-  /**
-   * Sanitizer Rules
-   */
-  static get sanitize() {
-    return {
-      level: false,
-      text: {},
-    };
-  }
-
-  /**
-   * Returns true to notify core that read-only is supported
-   *
-   * @returns {boolean}
-   */
-  static get isReadOnlySupported() {
-    return true;
-  }
-
-  /**
-   * Get current Tools`s data
-   *
-   * @returns {HeaderData} Current data
-   * @private
-   */
-  get data(): HeaderData {
-    this._data.text = this._element.innerHTML;
-    this._data.level = this.currentLevel.number;
-    
-    return this._data;
-  }
-
-  /**
-   * Store data in plugin:
-   * - at the this._data property
-   * - at the HTML
-   *
-   * @param {HeaderData} data — data to set
-   * @private
-   */
-  set data(data: HeaderData) {
-    this._data = this.normalizeData(data);
-
-    /**
-     * If level is set and block in DOM
-     * then replace it to a new block
-     */
-    if (data.level !== undefined && this._element.parentNode) {
-      /**
-       * Create a new tag
-       *
-       * @type {HTMLHeadingElement}
-       */
-      const newHeader = this.getTag();
-
-      /**
-       * Save Block's content
-       */
-      newHeader.innerHTML = this._element.innerHTML;
-
-      /**
-       * Replace blocks
-       */
-      this._element.parentNode.replaceChild(newHeader, this._element);
-
-      /**
-       * Save new block to private variable
-       *
-       * @type {HTMLHeadingElement}
-       * @private
-       */
-      this._element = newHeader;
-    }
-
-    /**
-     * If data.text was passed then update block's content
-     */
-    if (data.text !== undefined) {
-      this._element.innerHTML = this._data.text || '';
-    }
-  }
-
-  /**
-   * Get tag for target level
-   * By default returns second-leveled header
-   *
-   * @returns {HTMLElement}
-   */
-  getTag(): HTMLHeadingElement {
-    /**
-     * Create element for current Block's level
-     */
-    const tag = document.createElement(this.currentLevel.tag) as HTMLHeadingElement;
-
-    /**
-     * Add text to block
-     */
-    tag.innerHTML = this._data.text || '';
-
-    /**
-     * Add styles class
-     */
-    tag.classList.add(this._CSS.wrapper);
-
-    /**
-     * Make tag editable
-     */
-    tag.contentEditable = this.readOnly ? 'false' : 'true';
-
-    /**
-     * Add Placeholder
-     */
-    tag.dataset.placeholder = this.api.i18n.t(this._settings.placeholder || '');
-
-    return tag;
-  }
-
-  /**
-   * Get current level
-   *
-   * @returns {level}
-   */
-  get currentLevel(): Level {
-    let level = this.levels.find(levelItem => levelItem.number === this._data.level);
-
-    if (!level) {
-      level = this.defaultLevel;
-    }
-
-    return level;
-  }
-
-  /**
-   * Return default level
-   *
-   * @returns {level}
-   */
-  get defaultLevel(): Level {
-    /**
-     * User can specify own default level value
-     */
-    if (this._settings.defaultLevel) {
-      const userSpecified = this.levels.find(levelItem => {
-        return levelItem.number === this._settings.defaultLevel;
-      });
-
-      if (userSpecified) {
-        return userSpecified;
-      } else {
-        console.warn('(ง\'̀-\'́)ง Heading Tool: the default level specified was not found in available levels');
-      }
-    }
-
-    /**
-     * With no additional options, there will be H2 by default
-     *
-     * @type {level}
-     */
-    return this.levels[1];
-  }
-
-  /**
-   * @typedef {object} level
-   * @property {number} number - level number
-   * @property {string} tag - tag corresponds with level number
-   * @property {string} svg - icon
-   */
-
-  /**
-   * Available header levels
-   *
-   * @returns {level[]}
-   */
-  get levels(): Level[] {
-    const availableLevels = [
-      {
-        number: 1,
-        tag: 'H1',
-        svg: IconH1,
-      },
-      {
-        number: 2,
-        tag: 'H2',
-        svg: IconH2,
-      },
-      {
-        number: 3,
-        tag: 'H3',
-        svg: IconH3,
-      },
-      {
-        number: 4,
-        tag: 'H4',
-        svg: IconH4,
-      },
-      {
-        number: 5,
-        tag: 'H5',
-        svg: IconH5,
-      },
-      {
-        number: 6,
-        tag: 'H6',
-        svg: IconH6,
-      },
-    ];
-
-    return this._settings.levels ? availableLevels.filter(
-      l => this._settings.levels!.includes(l.number)
-    ) : availableLevels;
-  }
-
-  /**
-   * Handle H1-H6 tags on paste to substitute it with header Tool
-   *
-   * @param {PasteEvent} event - event with pasted content
-   */
-  onPaste(event: PasteEvent): void {
-    const detail = event.detail;
-
-    if ('data' in detail) {
-      const content = detail.data as HTMLElement;
-      /**
-       * Define default level value
-       *
-       * @type {number}
-       */
-      let level = this.defaultLevel.number;
-
-      switch (content.tagName) {
-        case 'H1':
-          level = 1;
-          break;
-        case 'H2':
-          level = 2;
-          break;
-        case 'H3':
-          level = 3;
-          break;
-        case 'H4':
-          level = 4;
-          break;
-        case 'H5':
-          level = 5;
-          break;
-        case 'H6':
-          level = 6;
-          break;
-      }
-
-      if (this._settings.levels) {
-        // Fallback to nearest level when specified not available
-        level = this._settings.levels.reduce((prevLevel, currLevel) => {
-          return Math.abs(currLevel - level) < Math.abs(prevLevel - level) ? currLevel : prevLevel;
-        });
-      }
-
-      this.data = {
-        level,
-        text: content.innerHTML,
-      };
-    }
-  }
-
-  /**
-   * Used by Editor.js paste handling API.
-   * Provides configuration to handle H1-H6 tags.
-   *
-   * @returns {{handler: (function(HTMLElement): {text: string}), tags: string[]}}
-   */
-  static get pasteConfig() {
-    return {
-      tags: ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'],
-    };
-  }
-
-  /**
-   * Get Tool toolbox settings
-   * icon - Tool icon's SVG
-   * title - title to show in toolbox
-   *
-   * @returns {{icon: string, title: string}}
-   */
-  static get toolbox() {
-    return {
-      icon: IconHeading,
-      title: 'Heading',
-    };
-  }
-}
+Header satisfies BlockToolConstructor<
+  HeaderData,
+  HeaderConfig,
+  DOMBlockToolAdapter
+>;
