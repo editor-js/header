@@ -15,7 +15,7 @@ yarn add @editorjs/header
 Include module at your application
 
 ```javascript
-import Header from '@editorjs/header';
+import { Header } from '@editorjs/header';
 ```
 
 Optionally, you can load this tool from CDN [JsDelivr CDN](https://cdn.jsdelivr.net/npm/@editorjs/header@latest)
@@ -95,17 +95,23 @@ You can select one of six levels for heading.
 
 ## Output data
 
-| Field | Type     | Description                                      |
-| ----- | -------- | ------------------------------------------------ |
-| text  | `string` | header's text                                    |
-| level | `number` | level of header: 1 for H1, 2 for H2 ... 6 for H6 |
+| Field | Type                 | Description                                      |
+| ----- | -------------------- | ------------------------------------------------ |
+| text  | `TextNodeSerialized`  | header's text, with inline formatting fragments  |
+| level | `number`              | level of header: 1 for H1, 2 for H2 ... 6 for H6 |
 
 ```json
 {
   "type": "header",
   "data": {
-    "text": "Why Telegram is the best messenger",
+    "text": { "value": "Why Telegram is the best messenger", "fragments": [] },
     "level": 2
   }
 }
 ```
+
+## TODO
+
+This package depends on `@editorjs/model`, `@editorjs/sdk`, and `@editorjs/dom-adapters` via `workspace:^`, and is meant to be developed, built, and tested only inside the [`document-model`](https://github.com/editor-js/document-model) workspace (as a git submodule under `packages/tools/header`) — it isn't installable or buildable standalone right now. `yarn install` in this repo alone will fail with a "Workspace not found" error.
+
+Publishing `@editorjs/header` to npm will happen through `document-model`'s own release pipeline once the submodule is wired in, not through this repository's own CI.
