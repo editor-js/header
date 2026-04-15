@@ -1,6 +1,11 @@
 {
   "name": "@editorjs/header",
   "version": "3.0.0",
+  "packageManager": "yarn@4.0.1",
+  "type": "module",
+  "main": "./dist/header.cjs",
+  "module": "./dist/header.js",
+  "types": "./dist/index.d.ts",
   "keywords": [
     "codex editor",
     "header",
@@ -11,35 +16,38 @@
   "description": "Heading Tool for Editor.js",
   "license": "MIT",
   "repository": "https://github.com/editor-js/header",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/header.js",
+      "require": "./dist/header.cjs",
+      "default": "./dist/header.js"
+    }
+  },
   "files": [
     "dist"
   ],
-  "main": "./dist/header.umd.js",
-  "module": "./dist/header.mjs",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/header.mjs",
-      "require": "./dist/header.umd.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
-  },
-  "author": {
-    "name": "CodeX",
-    "email": "team@codex.so"
+    "build": "yarn clear && vite build",
+    "dev": "vite build --watch",
+    "lint": "eslint ./src",
+    "lint:ci": "yarn lint --max-warnings 0",
+    "lint:fix": "yarn lint --fix",
+    "clear": "rm -rf ./dist && rm -f tsconfig.tsbuildinfo"
   },
   "devDependencies": {
-    "typescript": "^5.4.5",
-    "vite": "^4.5.0",
-    "vite-plugin-css-injected-by-js": "^3.3.0",
-    "vite-plugin-dts": "^3.9.1"
+    "eslint": "^9.24.0",
+    "eslint-config-codex": "^2.0.3",
+    "postcss-apply": "^0.12.0",
+    "postcss-preset-env": "^10.1.5",
+    "typescript": "^5.5.4",
+    "vite": "^8.0.8",
+    "vite-plugin-css-injected-by-js": "^3.5.2",
+    "vite-plugin-dts": "^3.7.3"
   },
   "dependencies": {
-    "@codexteam/icons": "^0.0.5",
-    "@editorjs/editorjs": "^2.29.1"
+    "@editorjs/editorjs": "^2.30.8",
+    "@editorjs/model": "workspace:^",
+    "@editorjs/sdk": "workspace:^"
   }
 }
