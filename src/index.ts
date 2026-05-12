@@ -4,7 +4,8 @@
 import './index.css';
 
 import { IconH1, IconH2, IconH3, IconH4, IconH5, IconH6, IconHeading } from '@codexteam/icons';
-import { API, BlockTune, PasteEvent } from '@editorjs/editorjs';
+import { API, BlockTool, PasteEvent } from '@editorjs/editorjs';
+import type { MenuConfig } from '@editorjs/editorjs/types/tools';
 
 /**
 * @description Tool's input and output data format
@@ -47,7 +48,7 @@ interface ConstructorArgs {
   /** Previously saved data */
   data: HeaderData | {};
   /** User config for the tool */
-  config: HeaderConfig;
+  config?: HeaderConfig;
   /** Editor.js API */
   api: API;
   /** Read-only mode flag */
@@ -62,7 +63,7 @@ interface ConstructorArgs {
  * @license MIT
  * @version 2.0.0
  */
-export default class Header {
+export default class Header implements BlockTool {
   /**
    * Render plugin`s main Element and fill it with saved data
    *
@@ -86,7 +87,7 @@ export default class Header {
   * Tool's settings passed from Editor
   * @private
   */
-  private _settings: HeaderConfig;
+  private _config: HeaderConfig | null;
   /**
   * Block's data
   * @private
@@ -108,7 +109,7 @@ export default class Header {
      * @type {HeaderConfig}
      * @private
      */
-    this._settings = config;
+    this._config = config ?? null;
 
     /**
      * Block's data
@@ -184,7 +185,7 @@ export default class Header {
    *
    * @returns {Array}
    */
-  renderSettings(): BlockTune[] {
+  renderSettings(): MenuConfig {
     return this.levels.map(level => ({
       icon: level.svg,
       label: this.api.i18n.t(`Heading ${level.number}`),
@@ -366,7 +367,7 @@ export default class Header {
     /**
      * Add Placeholder
      */
-    tag.dataset.placeholder = this.api.i18n.t(this._settings.placeholder || '');
+    tag.dataset.placeholder = this.api.i18n.t(this._config?.placeholder || '');
 
     return tag;
   }
@@ -395,9 +396,9 @@ export default class Header {
     /**
      * User can specify own default level value
      */
-    if (this._settings.defaultLevel) {
+    if (this._config?.defaultLevel) {
       const userSpecified = this.levels.find(levelItem => {
-        return levelItem.number === this._settings.defaultLevel;
+        return levelItem.number === this._config?.defaultLevel;
       });
 
       if (userSpecified) {
@@ -461,8 +462,8 @@ export default class Header {
       },
     ];
 
-    return this._settings.levels ? availableLevels.filter(
-      l => this._settings.levels!.includes(l.number)
+    return this._config?.levels ? availableLevels.filter(
+      l => this._config?.levels!.includes(l.number)
     ) : availableLevels;
   }
 
@@ -504,9 +505,9 @@ export default class Header {
           break;
       }
 
-      if (this._settings.levels) {
+      if (this._config?.levels) {
         // Fallback to nearest level when specified not available
-        level = this._settings.levels.reduce((prevLevel, currLevel) => {
+        level = this._config?.levels.reduce((prevLevel, currLevel) => {
           return Math.abs(currLevel - level) < Math.abs(prevLevel - level) ? currLevel : prevLevel;
         });
       }
