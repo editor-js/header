@@ -1,6 +1,11 @@
 {
   "name": "@editorjs/header",
-  "version": "2.8.8",
+  "version": "3.0.0",
+  "packageManager": "yarn@4.0.1",
+  "type": "module",
+  "main": "./dist/header.cjs",
+  "module": "./dist/header.js",
+  "types": "./dist/index.d.ts",
   "keywords": [
     "codex editor",
     "header",
@@ -11,35 +16,47 @@
   "description": "Heading Tool for Editor.js",
   "license": "MIT",
   "repository": "https://github.com/editor-js/header",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/header.js",
+      "require": "./dist/header.cjs",
+      "default": "./dist/header.js"
+    }
+  },
   "files": [
     "dist"
   ],
-  "main": "./dist/header.umd.js",
-  "module": "./dist/header.mjs",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/header.mjs",
-      "require": "./dist/header.umd.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
-  },
-  "author": {
-    "name": "CodeX",
-    "email": "team@codex.so"
+    "build": "yarn clear && vite build",
+    "dev": "vite build --watch",
+    "test": "node --experimental-vm-modules $(yarn bin jest)",
+    "test:coverage": "yarn test --coverage=true",
+    "lint": "eslint ./src",
+    "lint:ci": "yarn lint --max-warnings 0",
+    "lint:fix": "yarn lint --fix",
+    "clear": "rm -rf ./dist && rm -f tsconfig.tsbuildinfo"
   },
   "devDependencies": {
-    "typescript": "^5.4.5",
-    "vite": "^4.5.0",
-    "vite-plugin-css-injected-by-js": "^3.3.0",
-    "vite-plugin-dts": "^3.9.1"
+    "@editorjs/dom-adapters": "workspace:^",
+    "@editorjs/editorjs": "^2.30.8",
+    "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.1",
+    "@types/node": "^22.10.2",
+    "eslint": "^9.24.0",
+    "eslint-config-codex": "^2.0.3",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "postcss-apply": "^0.12.0",
+    "postcss-preset-env": "^10.1.5",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.5.4",
+    "vite": "^8.0.8",
+    "vite-plugin-css-injected-by-js": "^3.5.2",
+    "vite-plugin-dts": "^3.7.3"
   },
   "dependencies": {
-    "@codexteam/icons": "^0.0.5",
-    "@editorjs/editorjs": "^2.29.1"
+    "@codexteam/icons": "^0.3.3",
+    "@editorjs/sdk": "workspace:^"
   }
 }
